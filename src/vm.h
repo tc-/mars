@@ -1,0 +1,42 @@
+#ifndef VM_H
+#define VM_H
+
+class Interpreter;
+class Memory;
+class Stack;
+class IO;
+
+class VM
+{
+	public:
+
+		VM( Interpreter& interpreter, Memory& memory, Stack& stack, unsigned int cpu_speed );
+		virtual ~VM();
+
+		void update();
+
+		void setCPUSpeed( unsigned int new_speed );
+		unsigned int getCPUSpeed();
+
+		Memory& memory();
+		Stack& stack();
+
+		IO& getIO( unsigned int port );
+		void setIO( unsigned int port, IO& io );
+
+		unsigned int getPC();
+		void setPC( unsigned int pc );
+
+
+
+	protected:
+
+		Interpreter& m_interpreter;
+		Memory* m_memory;
+		Stack* m_stack;
+		unsigned int m_speed;
+		unsigned int m_pc;
+
+};
+
+#endif // VM_H
