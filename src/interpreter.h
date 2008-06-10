@@ -8,6 +8,7 @@ class Interpreter
 	public:
 
 		virtual void executeNext( VM& vm ) = 0;
+		virtual void reset( VM& vm ) = 0;
 
 };
 

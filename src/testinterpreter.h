@@ -9,9 +9,10 @@ class TestInterpreter : public Interpreter
 
 		TestInterpreter();
 
-		virtual ~TestInterpreter();
+		~TestInterpreter();
 
 		void executeNext( VM& vm );
+		void reset( VM& vm );
 };
 
 #endif // TESTINTERPRETER_H

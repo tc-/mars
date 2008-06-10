@@ -66,6 +66,12 @@ float Stack::popFloat()
 }
 
 
+void Stack::moveSP( int delta )
+{
+	// TODO: overflow, underflow checking.
+	m_sp += delta;
+}
+
 unsigned int Stack::sp()
 {
 	return m_sp;

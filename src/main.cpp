@@ -15,7 +15,5 @@ int main( int argc, char** argv )
 	m.writeInt(1,-10);
 	std::cout << m.readInt(1);
 
-
-
 	return 0;
 }

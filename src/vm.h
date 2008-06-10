@@ -27,15 +27,16 @@ class VM
 		unsigned int getPC();
 		void setPC( unsigned int pc );
 
-
+		void cyclesExecuted( int num );
 
 	protected:
 
 		Interpreter& m_interpreter;
-		Memory* m_memory;
-		Stack* m_stack;
+		Memory& m_memory;
+		Stack& m_stack;
 		unsigned int m_speed;
 		unsigned int m_pc;
+		unsigned int m_time_left;
 
 };
 

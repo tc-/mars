@@ -22,6 +22,8 @@ class Stack : public IO
 		unsigned int popUInt();
 		float popFloat();
 
+		void moveSP( int delta );
+
 		unsigned int sp();
 		unsigned int base();
 

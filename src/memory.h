@@ -17,6 +17,8 @@ class Memory: public IO
 		void clear();
 		void resize( unsigned int size );
 
+		unsigned int size() { return m_size; }
+
 	private:
 
 		unsigned int m_size;

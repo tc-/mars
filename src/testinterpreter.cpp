@@ -3,16 +3,20 @@
 
 TestInterpreter::TestInterpreter()
 {
-	//ctor
 }
 
 TestInterpreter::~TestInterpreter()
 {
-	//dtor
 }
 
 
 void TestInterpreter::executeNext( VM& vm )
+{
+
+}
+
+
+void TestInterpreter::reset( VM& vm )
 {
 
 }
