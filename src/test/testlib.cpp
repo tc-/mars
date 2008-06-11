@@ -49,9 +49,9 @@ void printTestResult()
 bool printGlobalTestResult()
 {
 	std::cout << std::endl << std::endl;
-	std::cout << "####################################" << std::endl;
-	std::cout << "#  Test results                   #" << std::endl;
-	std::cout << "##################################" << std::endl << std::endl;
+	std::cout << "#######################################" << std::endl;
+	std::cout << "##  Test results                     ##" << std::endl;
+	std::cout << "#######################################" << std::endl << std::endl;
 	std::cout << "Failures: " << failures_global << std::endl;
 	std::cout << "Successful: " << num_tests_global - failures_global << std::endl;
 	std::cout << "Total: " << num_tests_global << std::endl;
