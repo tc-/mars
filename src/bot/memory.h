@@ -4,6 +4,9 @@
 #include <stdexcept>
 #include "io.h"
 
+namespace bot
+{
+
 class Memory: public IO
 {
 	public:
@@ -24,5 +27,7 @@ class Memory: public IO
 		unsigned int m_size;
 		char* m_data;
 };
+
+}
 
 #endif // MEMORY_H

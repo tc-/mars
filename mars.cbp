@@ -6,18 +6,54 @@
 		<Option pch_mode="2" />
 		<Option compiler="gcc" />
 		<Build>
-			<Target title="Debug">
-				<Option output="bin/Debug/mars" prefix_auto="1" extension_auto="1" />
-				<Option object_output="obj/Debug/" />
+			<Target title="Test">
+				<Option output="bin/Test/mars" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="bin/Test/" />
+				<Option object_output="obj/Test/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+					<Add directory="src" />
+				</Compiler>
+			</Target>
+			<Target title="Client-Debug">
+				<Option output="bin/Client-Debug/mars" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="bin/Client-Debug/" />
+				<Option object_output="obj/Client-Debug/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-g" />
 				</Compiler>
 			</Target>
-			<Target title="Release">
-				<Option output="bin/Release/mars" prefix_auto="1" extension_auto="1" />
-				<Option object_output="obj/Release/" />
+			<Target title="Client-Release">
+				<Option output="bin/Client-Release/mars" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="bin/Client-Release/" />
+				<Option object_output="obj/Client-Release/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+			<Target title="Server-Debug">
+				<Option output="bin/Server-Debug/mars" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="bin/Server-Debug/" />
+				<Option object_output="obj/Server-Debug/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+				</Compiler>
+			</Target>
+			<Target title="Server-Release">
+				<Option output="bin/Server-Release/mars" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="bin/Server-Release/" />
+				<Option object_output="obj/Server-Release/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
 				<Compiler>
@@ -31,6 +67,38 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
+		<Unit filename="src/bot/io.cpp" />
+		<Unit filename="src/bot/io.h" />
+		<Unit filename="src/bot/memory.cpp" />
+		<Unit filename="src/bot/memory.h" />
+		<Unit filename="src/bot/stack.cpp" />
+		<Unit filename="src/bot/stack.h" />
+		<Unit filename="src/client/main.cpp">
+			<Option target="Client-Debug" />
+			<Option target="Client-Release" />
+		</Unit>
+		<Unit filename="src/interpreter/interpreter.h" />
+		<Unit filename="src/interpreter/vm.cpp" />
+		<Unit filename="src/interpreter/vm.h" />
+		<Unit filename="src/server/main.cpp">
+			<Option target="Server-Debug" />
+			<Option target="Server-Release" />
+		</Unit>
+		<Unit filename="src/test/test.cpp">
+			<Option target="Test" />
+		</Unit>
+		<Unit filename="src/test/testinterpreter.cpp">
+			<Option target="Test" />
+		</Unit>
+		<Unit filename="src/test/testinterpreter.h">
+			<Option target="Test" />
+		</Unit>
+		<Unit filename="src/test/testlib.cpp">
+			<Option target="Test" />
+		</Unit>
+		<Unit filename="src/test/testlib.h">
+			<Option target="Test" />
+		</Unit>
 		<Extensions>
 			<envvars />
 			<code_completion />

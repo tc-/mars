@@ -3,6 +3,9 @@
 
 #include "io.h"
 
+namespace bot
+{
+
 class Memory;
 
 class Stack : public IO
@@ -33,5 +36,7 @@ class Stack : public IO
 		unsigned int m_base;
 		unsigned int m_sp;
 };
+
+}
 
 #endif // STACK_H

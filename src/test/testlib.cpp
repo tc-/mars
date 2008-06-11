@@ -3,6 +3,9 @@
 
 #include "testlib.h"
 
+namespace test
+{
+
 int failures_global = 0;
 int failures_test = 0;
 int num_tests_global = 0;
@@ -35,7 +38,7 @@ void printTestResult( bool success )
 void printTestResult()
 {
 	if ( failures_test > 0 )
-		std::cout << "Result [ " << failures_test << " / " << (num_tests - failures_test) << " ]" << std::endl;
+		std::cout << "Result [ " << failures_test << " / " << (num_tests - failures_test) << " ] failed." << std::endl;
 	else
 		std::cout << "Result [ all ok ]" << std::endl;
 	failures_global += failures_test;
@@ -57,4 +60,6 @@ bool printGlobalTestResult()
 		std::cout << failures_global << " test(s) failed!" << std::endl;
 	}
 	return failures_global == 0;
+}
+
 }

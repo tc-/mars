@@ -1,5 +1,7 @@
 #include "memory.h"
 
+namespace bot
+{
 
 Memory::Memory( unsigned int size )
 {
@@ -44,4 +46,6 @@ void Memory::resize( unsigned int size )
 	for ( int i = 0; i < copysize; i++ ) m_data[i] = tmp[i];
 
 	delete tmp;
+}
+
 }

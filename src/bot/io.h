@@ -1,6 +1,9 @@
 #ifndef IO_H
 #define IO_H
 
+namespace bot
+{
+
 class IO
 {
 	public:
@@ -16,5 +19,7 @@ class IO
 		virtual void writeFloat( unsigned int index, const float& data );
 
 };
+
+}
 
 #endif // IO_H

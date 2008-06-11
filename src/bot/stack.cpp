@@ -2,6 +2,8 @@
 #include "stack.h"
 #include "memory.h"
 
+namespace bot
+{
 
 Stack::Stack( Memory& memory, unsigned int base_address ) :
   m_memory(&memory),
@@ -82,3 +84,4 @@ unsigned int Stack::base()
 	return m_base;
 }
 
+}

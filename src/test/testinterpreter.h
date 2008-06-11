@@ -1,7 +1,12 @@
 #ifndef TESTINTERPRETER_H
 #define TESTINTERPRETER_H
 
-#include "interpreter.h"
+#include "interpreter/interpreter.h"
+
+using namespace interpreter;
+
+namespace test
+{
 
 class TestInterpreter : public Interpreter
 {
@@ -14,5 +19,7 @@ class TestInterpreter : public Interpreter
 		void executeNext( VM& vm );
 		void reset( VM& vm );
 };
+
+}
 
 #endif // TESTINTERPRETER_H

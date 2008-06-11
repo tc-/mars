@@ -1,7 +1,10 @@
 
 #include <iostream>
-#include "memory.h"
+#include "bot/memory.h"
 #include "testlib.h"
+
+using namespace test;
+using namespace bot;
 
 void testMemory()
 {
@@ -48,5 +51,6 @@ int main( int argc, char** argv )
 
 	testMemory();
 
-	return printGlobalTestResult() == true;
+	if (printGlobalTestResult() ) return 0;
+	else return 255;
 }

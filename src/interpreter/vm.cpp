@@ -2,10 +2,12 @@
 #include <assert.h>
 
 #include "vm.h"
-#include "memory.h"
-#include "stack.h"
+#include "bot/memory.h"
+#include "bot/stack.h"
 #include "interpreter.h"
 
+namespace interpreter
+{
 
 VM::VM( Interpreter& interpreter, Memory& memory, Stack& stack, unsigned int cpu_speed ) :
   m_interpreter(interpreter),
@@ -83,4 +85,6 @@ unsigned int VM::getPC()
 void VM::setPC( unsigned int pc )
 {
 	m_pc = pc;
+}
+
 }

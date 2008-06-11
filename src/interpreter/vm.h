@@ -1,10 +1,14 @@
 #ifndef VM_H
 #define VM_H
 
-class Interpreter;
 class Memory;
 class Stack;
 class IO;
+
+namespace interpreter
+{
+
+class Interpreter;
 
 class VM
 {
@@ -39,5 +43,7 @@ class VM
 		unsigned int m_time_left;
 
 };
+
+}
 
 #endif // VM_H

@@ -1,6 +1,9 @@
 #ifndef INTERPRETER_H
 #define INTERPRETER_H
 
+namespace interpreter
+{
+
 class VM;
 
 class Interpreter
@@ -11,5 +14,7 @@ class Interpreter
 		virtual void reset( VM& vm ) = 0;
 
 };
+
+}
 
 #endif // INTERPRETER_H

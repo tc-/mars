@@ -1,6 +1,7 @@
 #include "io.h"
 
-
+namespace bot
+{
 
 int IO::readInt( unsigned int index )
 {
@@ -39,7 +40,7 @@ void IO::writeInt( unsigned int index, const int& data )
 void IO::writeUInt( unsigned int index, const unsigned int& data )
 {
 	unsigned int size = sizeof(unsigned int);
-	const char c[size] = reinterpret_cast<const char*>(&data);
+	const char* c = reinterpret_cast<const char*>(&data);
 	for ( unsigned int i = 0; i < size; i++ ) writeChar(index+i, c[i] );
 }
 
@@ -50,3 +51,4 @@ void IO::writeFloat( unsigned int index, const float& data )
 	for ( unsigned int i = 0; i < size; i++ ) writeChar(index+i, ((char*)&data)[i] );
 }
 
+}
