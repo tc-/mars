@@ -17,6 +17,7 @@ VM::VM( Interpreter& interpreter, Memory& memory, Stack& stack, unsigned int cpu
   m_pc(0),
   m_time_left(0)
 {
+	m_interpreter.reset(*this);
 }
 
 VM::~VM()

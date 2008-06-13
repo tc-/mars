@@ -6,49 +6,51 @@ namespace bot
 int IO::readInt( unsigned int index )
 {
 	unsigned int size = sizeof(int);
-	int data[size];
+	char data[size];
 	for ( unsigned int i = 0; i < size; i++ ) data[i] = readChar(index+i);
-	return (int)data[0];
+	int* i = reinterpret_cast<int*>(data);
+	return *i;
 }
 
 
 unsigned int IO::readUInt( unsigned int index )
 {
 	unsigned int size = sizeof(unsigned int);
-	int data[size];
+	char data[size];
 	for ( unsigned int i = 0; i < size; i++ ) data[i] = readChar(index+i);
-	return (unsigned int)data[0];
+	unsigned int* ui = reinterpret_cast<unsigned int*>(data);
+	return *ui;
 }
 
 
 float IO::readFloat( unsigned int index )
 {
 	unsigned int size = sizeof(float);
-	int data[size];
+	char data[size];
 	for ( unsigned int i = 0; i < size; i++ ) data[i] = readChar(index+i);
-	return (float)data[0];
+	float* f = reinterpret_cast<float*>(data);
+	return *f;
 }
 
 
 void IO::writeInt( unsigned int index, const int& data )
 {
-	unsigned int size = sizeof(int);
-	for ( unsigned int i = 0; i < size; i++ ) writeChar(index+i, ((char*)&data)[i] );
+	const char* c = reinterpret_cast<const char*>(&data);
+	for ( unsigned int i = 0; i < sizeof(data); i++ ) writeChar(index+i, c[i] );
 }
 
 
 void IO::writeUInt( unsigned int index, const unsigned int& data )
 {
-	unsigned int size = sizeof(unsigned int);
 	const char* c = reinterpret_cast<const char*>(&data);
-	for ( unsigned int i = 0; i < size; i++ ) writeChar(index+i, c[i] );
+	for ( unsigned int i = 0; i < sizeof(data); i++ ) writeChar(index+i, c[i] );
 }
 
 
 void IO::writeFloat( unsigned int index, const float& data )
 {
-	unsigned int size = sizeof(float);
-	for ( unsigned int i = 0; i < size; i++ ) writeChar(index+i, ((char*)&data)[i] );
+	const char* c = reinterpret_cast<const char*>(&data);
+	for ( unsigned int i = 0; i < sizeof(data); i++ ) writeChar(index+i, c[i] );
 }
 
 }
