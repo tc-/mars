@@ -1,9 +1,13 @@
 #ifndef VM_H
 #define VM_H
 
+namespace bot {
 class Memory;
 class Stack;
 class IO;
+}
+
+using namespace bot;
 
 namespace interpreter
 {

@@ -14,8 +14,8 @@ class Memory: public IO
 		Memory( unsigned int size );
 		~Memory();
 
-		char readChar( unsigned int index ) throw ( std::invalid_argument );
-		void writeChar( unsigned int index, const char& data ) throw ( std::invalid_argument );
+		vmByte readByte( unsigned int index ) throw ( std::invalid_argument );
+		void writeByte( unsigned int index, const vmByte& data ) throw ( std::invalid_argument );
 
 		void clear();
 		void resize( unsigned int size );
@@ -25,7 +25,7 @@ class Memory: public IO
 	private:
 
 		unsigned int m_size;
-		char* m_data;
+		vmByte* m_data;
 };
 
 }

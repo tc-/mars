@@ -20,7 +20,7 @@ Stack::~Stack()
 
 void Stack::pushChar( const char& data )
 {
-	m_memory->writeChar( m_sp, data );
+	m_memory->writeByte( m_sp, data );
 	m_sp += sizeof(char);
 }
 
@@ -46,7 +46,7 @@ void Stack::pushFloat( const float& data )
 char Stack::popChar()
 {
 	m_sp -= sizeof(char);
-	return m_memory->readChar(m_sp);
+	return m_memory->readByte(m_sp);
 }
 
 int Stack::popInt()
