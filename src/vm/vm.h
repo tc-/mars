@@ -9,7 +9,7 @@ class IO;
 
 using namespace bot;
 
-namespace interpreter
+namespace vm
 {
 
 class VM;

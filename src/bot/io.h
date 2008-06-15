@@ -1,7 +1,7 @@
 #ifndef IO_H
 #define IO_H
 
-#include "interpreter/vmtypes.h"
+#include "vm/vmtypes.h"
 
 namespace bot
 {

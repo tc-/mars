@@ -17,7 +17,7 @@
 #define isValidIntMemPos(index) (index+sizeof(vmInt)<memsize)
 
 
-namespace interpreter
+namespace vm
 {
 
 VM::VM( Memory& memory, unsigned int cpu_speed, unsigned int sp ) :
