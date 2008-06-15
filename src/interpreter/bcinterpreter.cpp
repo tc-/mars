@@ -39,7 +39,7 @@ BCInterpreter::~BCInterpreter()
 
 void BCInterpreter::executeNext( VM& vm )
 {
-	try {
+/*	try {
 
 		vmUInt pc = vm.getPC();
 		vmByte op = vm.memory().readByte( pc++ );
@@ -48,14 +48,14 @@ void BCInterpreter::executeNext( VM& vm )
 
 	} catch ( std::exception& e ) {
 		std::cout << "Exception in BCInterpreter::executeNext(VM): " << e.what() << std::endl;
-	}
+	}*/
 }
 
 void BCInterpreter::reset( VM& vm )
 {
-	vm.setPC( 0 );
+//	vm.setPC( 0 );
 }
-
+/*
 void BCInterpreter::executeOp( const unsigned char& op, unsigned int& pc, VM& vm)
 {
 	unsigned char opgroup = op >> 2;
@@ -93,29 +93,34 @@ void BCInterpreter::executeOp( const unsigned char& op, unsigned int& pc, VM& vm
 		default: break;
 	}
 
+	vm.cyclesExecuted(1);
 }
 
 void BCInterpreter::executeCONST( const unsigned char& subop, unsigned int& pc, VM& vm)
 {
 	switch ( subop ) {
-		case 0:
+		case 0: // iconst
 			vm.stack().pushInt( vm.memory().readInt( pc ) );
-			pc += sizeof(int);
+			pc += sizeof(vmInt);
+			vm.cyclesExecuted(2);
 			break;
 
-		case 1:
+		case 1: // iconst_0
 			vm.stack().pushInt(0);
-			pc += sizeof(int);
+			pc += sizeof(vmInt);
+			vm.cyclesExecuted(2);
 			break;
 
-		case 2:
+		case 2: // iconst_1
 			vm.stack().pushInt(1);
-			pc += sizeof(int);
+			pc += sizeof(vmInt);
+			vm.cyclesExecuted(2);
 			break;
 
-		case 3:
+		case 3: // iconst_m1
 			vm.stack().pushInt(-1);
-			pc += sizeof(int);
+			pc += sizeof(vmInt);
+			vm.cyclesExecuted(2);
 			break;
 
 		default: throw std::invalid_argument("executeCONST(): invalid subop"); break;
@@ -213,8 +218,18 @@ void BCInterpreter::executeCALL( const unsigned char& subop, unsigned int& pc, V
 void BCInterpreter::executeMEM( const unsigned char& subop, unsigned int& pc, VM& vm)
 {
 	switch ( subop ) {
-		case 0: break;
-		case 1: break;
+		case 0: // imemstor
+			vm.memory().writeInt( vm.memory().readUInt(pc), vm.stack().popInt() );
+			pc += sizeof(vmInt);
+			vm.cyclesExecuted(3);
+			break;
+
+		case 1: // imemload
+			vm.stack().pushInt( vm.memory().readInt( vm.memory().readUInt(pc) ) );
+			pc += sizeof(vmInt);
+			vm.cyclesExecuted(3);
+			break;
+
 		case 2: break;
 		case 3: break;
 		default: throw std::invalid_argument("executeMEM(): invalid subop"); break;
@@ -244,5 +259,6 @@ void BCInterpreter::executeEXT( const unsigned char& subop, unsigned int& pc, VM
 		default: throw std::invalid_argument("executeEXT(): invalid subop"); break;
 	}
 }
+*/
 
 }

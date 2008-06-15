@@ -2,6 +2,9 @@
 #define MEMORY_H
 
 #include <stdexcept>
+#include <iostream>
+#include <climits>
+
 #include "io.h"
 
 namespace bot
@@ -20,12 +23,16 @@ class Memory: public IO
 		void clear();
 		void resize( unsigned int size );
 
-		unsigned int size() { return m_size; }
+		inline unsigned int size() { return m_size; }
+		vmByte* data;
+
+		void load( std::istream& stream, const unsigned int& toLocation = 0 ) throw ( std::invalid_argument );
+		void save( std::ostream& stream, const unsigned int& startPos = 0, const unsigned int& length = UINT_MAX ) throw ( std::invalid_argument );
 
 	private:
 
 		unsigned int m_size;
-		vmByte* m_data;
+
 };
 
 }

@@ -1,8 +1,9 @@
 #ifndef VM_H
 #define VM_H
 
+#include "bot/memory.h"
+
 namespace bot {
-class Memory;
 class Stack;
 class IO;
 }
@@ -12,39 +13,40 @@ using namespace bot;
 namespace interpreter
 {
 
-class Interpreter;
+class VM;
+
+typedef void (VM::*interpretFunc)();
 
 class VM
 {
 	public:
 
-		VM( Interpreter& interpreter, Memory& memory, Stack& stack, unsigned int cpu_speed );
+		VM( Memory& memory, unsigned int cpu_speed, unsigned int sp );
 		virtual ~VM();
 
 		void update();
 
-		void setCPUSpeed( unsigned int new_speed );
-		unsigned int getCPUSpeed();
+		inline void setCPUSpeed( unsigned int new_speed ) { m_speed = new_speed; }
+		inline unsigned int getCPUSpeed() { return m_speed; }
 
-		Memory& memory();
-		Stack& stack();
+		inline unsigned int getPC() { return m_pc; }
+		inline void setPC( unsigned int pc ) { m_pc = pc % m_memory.size(); }
 
-		IO& getIO( unsigned int port );
-		void setIO( unsigned int port, IO& io );
+		inline unsigned int getSP() { return m_sp; }
+		inline void setSP( unsigned int sp ) { m_sp = sp % m_memory.size(); }
 
-		unsigned int getPC();
-		void setPC( unsigned int pc );
-
-		void cyclesExecuted( int num );
+		void reset( unsigned int pc, unsigned int sp );
 
 	protected:
 
-		Interpreter& m_interpreter;
 		Memory& m_memory;
-		Stack& m_stack;
 		unsigned int m_speed;
 		unsigned int m_pc;
+		unsigned int m_sp;
+		unsigned int m_bos;
 		unsigned int m_time_left;
+
+		void interpretBC();
 
 };
 
