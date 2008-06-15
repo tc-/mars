@@ -3,17 +3,18 @@
 #include <iostream>
 
 #include "vm.h"
-#include "bot/stack.h"
-#include "interpreter.h"
 
-#define incPC(num) m_pc=m_pc+num<m_memory.size()?m_pc+num:(m_pc+num)%m_memory.size()
-#define decPC(num) m_pc=m_pc-num<0?0:m_pc-num
-#define incSP(num) m_sp=m_sp+num<m_memory.size()?m_sp+num:(m_sp+num)%m_memory.size()
-#define decSP(num) m_sp=m_sp-num<0?0:m_sp-num
-#define memIntCast(pos) reinterpret_cast<vmInt*>(&m_memory.data[pos])
-#define memByteCast(pos) reinterpret_cast<vmByte*>(&m_memory.data[pos])
-#define isValidIntMemPos(pos) (pos+sizeof(vmInt)<m_memory.size())
-#define isValidByteMemPos(pos) (pos<m_memory.size())
+#define incPC(num) m_pc+=num
+#define incSP(num) m_sp+=num
+
+#define readInt(index) (*((vmInt*)&data[index]))
+#define getIntRef(index) (*((vmInt*)&data[index]))
+
+#define readUInt(index) (*((vmUInt*)&data[index]))
+
+#define readSByte(index) (*((vmSByte*)&data[index]))
+
+#define isValidIntMemPos(index) (index+sizeof(vmInt)<memsize)
 
 
 namespace interpreter
@@ -33,12 +34,6 @@ VM::~VM()
 {
 }
 
-void VM::update()
-{
-	m_time_left += m_speed;
-	interpretBC();
-}
-
 void VM::reset( unsigned int pc, unsigned int sp )
 {
 	setPC(pc);
@@ -47,20 +42,18 @@ void VM::reset( unsigned int pc, unsigned int sp )
 	m_time_left = 0;
 }
 
-void VM::interpretBC()
+// 3796650 -> 4001600 -> 5084575 -> 6040825 -> 7549540
+void VM::update()
 {
+	m_time_left += m_speed;
 
-	vmInt* toI;
-	vmSByte* sb;
-	unsigned int pos;
+	unsigned int memsize = m_memory.size();;
+	vmByte* data = m_memory.data;
+	vmUInt pos;
 
-	while ( m_time_left > 0 ) {
-		m_time_left--;
+	while ( m_time_left-- > 0 ) {
 
-		vmByte op = m_memory.data[m_pc];
-		incPC(1);
-
-		switch ( op ) {
+		switch ( data[m_pc++] ) {
 
 /* --------------------------------------- NOP GROUP ------------------------------------- */
 
@@ -70,15 +63,12 @@ void VM::interpretBC()
 			case 2: break;
 			case 3: break;
 
-/* --------------------------------------- CONST GROUP ------------------------------------- */
+/* --------------------------------------- ICONST GROUP ------------------------------------- */
 
 			case 4: // iconst
-				if ( isValidIntMemPos(m_pc) && isValidIntMemPos(m_sp) ) {
-					toI = memIntCast(m_sp);
-					(*toI) = *(memIntCast(m_pc));
-				}
-				incSP(sizeof(vmInt));
-				incPC(sizeof(vmInt));
+				getIntRef(m_sp) = readInt(m_pc);
+				m_sp += sizeof(vmInt);
+				m_pc += sizeof(vmInt);
 			break;
 
 			case 5: // iconst_0
@@ -91,18 +81,12 @@ void VM::interpretBC()
 /* --------------------------------------- ILOAD GROUP ------------------------------------- */
 
 			case 8: // iload_b
-				if ( isValidIntMemPos(m_pc) ) {
-					pos = m_bos + *(memIntCast(m_pc));
-					if ( isValidIntMemPos(pos) ) {
-						toI = memIntCast(m_sp);
-						(*toI) = *memIntCast( pos );
-					}
-				}
+				pos = m_bos + readUInt(m_pc);
+				if ( isValidIntMemPos(pos) ) getIntRef(m_sp) = readInt( pos );
 				incSP(sizeof(vmInt));
 				incPC(sizeof(vmInt));
 			break;
 			case 9: // iload
-
 			break;
 			case 10: break;
 			case 11: break;
@@ -119,13 +103,7 @@ void VM::interpretBC()
 /* --------------------------------------- JUMP GROUP ------------------------------------- */
 
 			case 16: // goto_b
-				if ( isValidByteMemPos(m_pc) ) {
-					sb = (vmSByte*)&m_memory.data[m_pc];
-					if ( *sb > 0 ) incPC(*sb);
-					else decPC(-(*sb));
-				} else {
-					incPC(sizeof(vmSByte));
-				}
+				incPC(readSByte(m_pc));
 			break;
 			case 17: // goto
 			break;
@@ -145,10 +123,7 @@ void VM::interpretBC()
 			break;
 
 			case 24: // iinc
-				if ( isValidIntMemPos(m_pc) && isValidIntMemPos(m_sp-sizeof(vmInt)) ) {
-					toI = memIntCast(m_sp-sizeof(vmInt));
-					(*toI) += *(memIntCast(m_pc));
-				}
+				getIntRef( m_sp-sizeof(vmInt) ) += readInt(m_pc);
 				incPC(sizeof(vmInt));
 			break;
 			case 25: break;
@@ -176,17 +151,13 @@ void VM::interpretBC()
 /* --------------------------------------- STACK GROUP ------------------------------------- */
 
 			case 36: // pop
-				decSP(1);
+				incSP(-1);
 			break;
 			case 37: // pop_4
-				decSP(4);
+				incSP(-4);
 			break;
 			case 38: // incsp
-				if ( isValidByteMemPos(m_pc) ) {
-					pos = *(reinterpret_cast<vmSByte*>(&m_memory.data[m_pc]));
-					if ( pos > 0 ) incSP(pos);
-					else decSP(-pos);
-				}
+				incSP(readSByte(m_pc));
 				incPC(sizeof(vmByte));
 			break;
 			case 39: break;
@@ -441,12 +412,20 @@ void VM::interpretBC()
 			case 254: break;
 			case 255: // extended
 				if ( m_memory.data[m_pc] != 255 ) {
-					incPC(1);
-					m_time_left -= 1;
+					incPC(sizeof(vmByte));
 				}
 			break;
 
 		}
+
+		// Normalize m_pc
+		if ( m_pc >= memsize ) m_pc = 0;
+		else if ( m_pc < 0 ) m_pc = 0;
+
+		// Normalize m_sp
+		if ( m_sp >= memsize ) m_sp = memsize;
+		else if ( m_sp < 0 ) m_sp = 0;
+
 	}
 
 }

@@ -4,7 +4,6 @@
 #include "bot/memory.h"
 
 namespace bot {
-class Stack;
 class IO;
 }
 
@@ -46,7 +45,7 @@ class VM
 		unsigned int m_bos;
 		unsigned int m_time_left;
 
-		void interpretBC();
+		//void interpretBC();
 
 };
 

@@ -8,12 +8,14 @@ namespace bot
 Memory::Memory( unsigned int size )
 {
 	m_size = size;
-	data = new vmByte[size];
+	data = new vmByte[size+32];
+	data = &data[15];
 }
 
 
 Memory::~Memory()
 {
+	data = &data[-15];
 	delete data;
 }
 
@@ -41,12 +43,14 @@ void Memory::clear()
 void Memory::resize( unsigned int size )
 {
 	unsigned char* tmp = data;
-	data = new unsigned char[size];
+	data = new unsigned char[size+32];
+	data = &data[15];
 	unsigned int copysize = m_size < size ? m_size : size;
 	m_size = size;
 
 	for ( unsigned int i = 0; i < copysize; i++ ) data[i] = tmp[i];
 
+	tmp = &tmp[-15];
 	delete tmp;
 }
 
