@@ -1,21 +1,26 @@
 
+#include <limits.h>
 #include <assert.h>
 #include <iostream>
 
 #include "vm.h"
 
-#define incPC(num) m_pc+=num
-#define incSP(num) m_sp+=num
+#define incPC(num) pc+=num
+#define incSP(num) sp+=num
 
 #define readInt(index) (*((vmInt*)&data[index]))
-#define getIntRef(index) (*((vmInt*)&data[index]))
+#define intRef(index) (*((vmInt*)&data[index]))
 
 #define readUInt(index) (*((vmUInt*)&data[index]))
 
 #define readSByte(index) (*((vmSByte*)&data[index]))
 
+#define readByte(index) (data[index])
+#define byteRef(index) (data[index])
+
 #define isValidIntMemPos(index) (index+sizeof(vmInt)<memsize)
 
+#define callInterrupt(intType) m_pc=pc;m_sp=sp;interrupt(intType);pc=m_pc;sp=m_sp
 
 namespace vm
 {
@@ -40,6 +45,16 @@ void VM::reset( unsigned int pc, unsigned int sp )
 	setSP(sp);
 	m_bos = m_sp;
 	m_time_left = 0;
+	for( unsigned int i = 0; i < numInterruptVectors; i++ ) m_ints[i] = UINT_MAX;
+}
+
+void VM::interrupt( Interrupts interrupt )
+{
+
+}
+
+void nop()
+{
 }
 
 // 3796650 -> 4001600 -> 5084575 -> 6040825 -> 7549540
@@ -50,103 +65,149 @@ void VM::update()
 	unsigned int memsize = m_memory.size();;
 	vmByte* data = m_memory.data;
 	vmUInt pos;
+	int time_left = m_time_left;
+	unsigned int pc = m_pc;
+	unsigned int sp = m_sp;
 
-	while ( m_time_left-- > 0 ) {
+	while ( time_left-- > 0 ) {
 
-		switch ( data[m_pc++] ) {
+		switch ( data[pc++] ) {
 
 /* --------------------------------------- NOP GROUP ------------------------------------- */
 
 			case 0: // nop
+				nop();
 			break;
-			case 1: break;
-			case 2: break;
-			case 3: break;
+			case 1: nop(); break;
+			case 2: nop(); break;
+			case 3: nop(); break;
 
 /* --------------------------------------- ICONST GROUP ------------------------------------- */
 
 			case 4: // iconst
-				getIntRef(m_sp) = readInt(m_pc);
-				m_sp += sizeof(vmInt);
-				m_pc += sizeof(vmInt);
+				intRef(sp) = readInt(pc);
+				incSP(sizeof(vmInt));
+				incPC(sizeof(vmInt));
 			break;
 
 			case 5: // iconst_0
+				intRef(sp) = 0;
+				incSP(sizeof(vmInt));
 			break;
 			case 6: // iconst_1
+				intRef(sp) = 1;
+				incSP(sizeof(vmInt));
 			break;
 			case 7: // iconst_m1
+				intRef(sp) = -1;
+				incSP(sizeof(vmInt));
 			break;
 
 /* --------------------------------------- ILOAD GROUP ------------------------------------- */
 
 			case 8: // iload_b
-				pos = m_bos + readUInt(m_pc);
-				if ( isValidIntMemPos(pos) ) getIntRef(m_sp) = readInt( pos );
+				pos = sp - readSByte(pc);
+				if ( isValidIntMemPos(pos) ) intRef(sp) = readInt( pos );
+				incSP(sizeof(vmInt));
+				incPC(sizeof(vmSByte));
+			break;
+			case 9: // iload
+				pos = m_bos + readInt(pc);
+				if ( isValidIntMemPos(pos) ) intRef(sp) = readInt( pos );
 				incSP(sizeof(vmInt));
 				incPC(sizeof(vmInt));
 			break;
-			case 9: // iload
-			break;
-			case 10: break;
-			case 11: break;
+			case 10: nop(); break;
+			case 11: nop(); break;
 
 /* --------------------------------------- ISTOR GROUP ------------------------------------- */
 
 			case 12: // istor_b
+				nop();
 			break;
 			case 13: // istor
+				nop();
 			break;
-			case 14: break;
-			case 15: break;
+			case 14: nop(); break;
+			case 15: nop(); break;
 
 /* --------------------------------------- JUMP GROUP ------------------------------------- */
 
 			case 16: // goto_b
-				incPC(readSByte(m_pc));
+				incPC(readSByte(pc));
 			break;
 			case 17: // goto
+				incPC(readInt(pc));
 			break;
 			case 18: // jump
+				pc = readUInt(pc);
 			break;
-			case 19: break;
+			case 19: nop(); break;
 
 /* --------------------------------------- IOPS GROUP ------------------------------------- */
 
 			case 20: // iadd
+				intRef( sp-2*sizeof(vmInt) ) += readInt( sp-sizeof(vmInt) );
+				incSP(-sizeof(vmInt));
 			break;
 			case 21: // imul
+				intRef( sp-2*sizeof(vmInt) ) *= readInt( sp-sizeof(vmInt) );
+				incSP(-sizeof(vmInt));
 			break;
 			case 22: // idiv
+				if ( readInt( sp-sizeof(vmInt) ) != 0 ) {
+					intRef( sp-2*sizeof(vmInt) ) /= readInt( sp-sizeof(vmInt) );
+					incSP(-sizeof(vmInt));
+				} else {
+					intRef( sp-2*sizeof(vmInt) ) = INT_MAX;
+					incSP(-sizeof(vmInt));
+					callInterrupt(intDivideByZero);
+				}
 			break;
 			case 23: // imod
+				if ( readInt( sp-sizeof(vmInt) ) != 0 ) {
+					intRef( sp-2*sizeof(vmInt) ) %= readInt( sp-sizeof(vmInt) );
+					incSP(-sizeof(vmInt));
+				} else {
+					intRef( sp-2*sizeof(vmInt) ) = 0;
+					incSP(-sizeof(vmInt));
+					callInterrupt(intDivideByZero);
+				}
 			break;
 
 			case 24: // iinc
-				getIntRef( m_sp-sizeof(vmInt) ) += readInt(m_pc);
+				intRef( sp-sizeof(vmInt) ) += readInt(pc);
 				incPC(sizeof(vmInt));
 			break;
-			case 25: break;
-			case 26: break;
-			case 27: break;
+			case 25: //iinc_1
+				intRef( sp-sizeof(vmInt) )++;
+			break;
+			case 26: nop(); break;
+			case 27: nop(); break;
 
 /* --------------------------------------- BRA GROUP ------------------------------------- */
 
 			case 28: // bne
+				nop();
 			break;
 			case 29: // beq
+				nop();
 			break;
 			case 30: // blt
+				nop();
 			break;
 			case 31: // bgt
+				nop();
 			break;
 
 			case 32: // bge
+				nop();
 			break;
 			case 33: // ble
+				nop();
 			break;
-			case 34: break;
-			case 35: break;
+			case 34: nop(); break;
+			case 35: nop(); break;
 
 /* --------------------------------------- STACK GROUP ------------------------------------- */
 
@@ -157,277 +218,294 @@ void VM::update()
 				incSP(-4);
 			break;
 			case 38: // incsp
-				incSP(readSByte(m_pc));
+				incSP(readSByte(pc));
 				incPC(sizeof(vmByte));
 			break;
-			case 39: break;
+			case 39: nop(); break;
 
 /* --------------------------------------- LOGIC GROUP ------------------------------------- */
 
 			case 40: // or
+				nop();
 			break;
 			case 41: // and
+				nop();
 			break;
-			case 42: break;
-			case 43: break;
+			case 42: nop(); break;
+			case 43: nop(); break;
 
 /* --------------------------------------- CALL GROUP ------------------------------------- */
 
 			case 44: // jsr_b
+				nop();
 			break;
 			case 45: // jsr
+				nop();
 			break;
-			case 46: break;
+			case 46: nop(); break;
 			case 47: // ret
+				nop();
 			break;
 
 /* --------------------------------------- MEM GROUP ------------------------------------- */
 
 			case 48: // imemstor
+				nop();
 			break;
 			case 49: // imemload
+				nop();
 			break;
-			case 50: break;
-			case 51: break;
+			case 50: nop(); break;
+			case 51: nop(); break;
 
 /* --------------------------------------- PORT GROUP ------------------------------------- */
 
 			case 52: // port_r
+				nop();
 			break;
 			case 53: // port_w
+				nop();
 			break;
 			case 54: // iport_r
+				nop();
 			break;
 			case 55: // iport_w
+				nop();
 			break;
 
 /* ------------------------------------ UNDEFINED GROUP ---------------------------------- */
 
-			case 56: break;
-			case 57: break;
-			case 58: break;
-			case 59: break;
+			case 56: // swi
+				nop();
+			break;
+			case 57: // seti
+				nop();
+			break;
+			case 58: // unseti
+				nop();
+			break;
+			case 59: // reti
+				nop();
+			break;
 
-			case 60: break;
-			case 61: break;
-			case 62: break;
-			case 63: break;
+			case 60: nop(); break;
+			case 61: nop(); break;
+			case 62: nop(); break;
+			case 63: nop(); break;
 
-			case 64: break;
-			case 65: break;
-			case 66: break;
-			case 67: break;
+			case 64: nop(); break;
+			case 65: nop(); break;
+			case 66: nop(); break;
+			case 67: nop(); break;
 
-			case 68: break;
-			case 69: break;
-			case 70: break;
-			case 71: break;
-			case 72: break;
-			case 73: break;
-			case 74: break;
-			case 75: break;
-			case 76: break;
-			case 77: break;
-			case 78: break;
-			case 79: break;
-			case 80: break;
-			case 81: break;
-			case 82: break;
-			case 83: break;
-			case 84: break;
-			case 85: break;
-			case 86: break;
-			case 87: break;
-			case 88: break;
-			case 89: break;
-			case 90: break;
-			case 91: break;
-			case 92: break;
-			case 93: break;
-			case 94: break;
-			case 95: break;
-			case 96: break;
-			case 97: break;
-			case 98: break;
-			case 99: break;
+			case 68: nop(); break;
+			case 69: nop(); break;
+			case 70: nop(); break;
+			case 71: nop(); break;
+			case 72: nop(); break;
+			case 73: nop(); break;
+			case 74: nop(); break;
+			case 75: nop(); break;
+			case 76: nop(); break;
+			case 77: nop(); break;
+			case 78: nop(); break;
+			case 79: nop(); break;
+			case 80: nop(); break;
+			case 81: nop(); break;
+			case 82: nop(); break;
+			case 83: nop(); break;
+			case 84: nop(); break;
+			case 85: nop(); break;
+			case 86: nop(); break;
+			case 87: nop(); break;
+			case 88: nop(); break;
+			case 89: nop(); break;
+			case 90: nop(); break;
+			case 91: nop(); break;
+			case 92: nop(); break;
+			case 93: nop(); break;
+			case 94: nop(); break;
+			case 95: nop(); break;
+			case 96: nop(); break;
+			case 97: nop(); break;
+			case 98: nop(); break;
+			case 99: nop(); break;
 
-			case 100: break;
-			case 101: break;
-			case 102: break;
-			case 103: break;
-			case 104: break;
-			case 105: break;
-			case 106: break;
-			case 107: break;
-			case 108: break;
-			case 109: break;
-			case 110: break;
-			case 111: break;
-			case 112: break;
-			case 113: break;
-			case 114: break;
-			case 115: break;
-			case 116: break;
-			case 117: break;
-			case 118: break;
-			case 119: break;
-			case 120: break;
-			case 121: break;
-			case 122: break;
-			case 123: break;
-			case 124: break;
-			case 125: break;
-			case 126: break;
-			case 127: break;
-			case 128: break;
-			case 129: break;
-			case 130: break;
-			case 131: break;
-			case 132: break;
-			case 133: break;
-			case 134: break;
-			case 135: break;
-			case 136: break;
-			case 137: break;
-			case 138: break;
-			case 139: break;
-			case 140: break;
-			case 141: break;
-			case 142: break;
-			case 143: break;
-			case 144: break;
-			case 145: break;
-			case 146: break;
-			case 147: break;
-			case 148: break;
-			case 149: break;
-			case 150: break;
-			case 151: break;
-			case 152: break;
-			case 153: break;
-			case 154: break;
-			case 155: break;
-			case 156: break;
-			case 157: break;
-			case 158: break;
-			case 159: break;
-			case 160: break;
-			case 161: break;
-			case 162: break;
-			case 163: break;
-			case 164: break;
-			case 165: break;
-			case 166: break;
-			case 167: break;
-			case 168: break;
-			case 169: break;
-			case 170: break;
-			case 171: break;
-			case 172: break;
-			case 173: break;
-			case 174: break;
-			case 175: break;
-			case 176: break;
-			case 177: break;
-			case 178: break;
-			case 179: break;
-			case 180: break;
-			case 181: break;
-			case 182: break;
-			case 183: break;
-			case 184: break;
-			case 185: break;
-			case 186: break;
-			case 187: break;
-			case 188: break;
-			case 189: break;
-			case 190: break;
-			case 191: break;
-			case 192: break;
-			case 193: break;
-			case 194: break;
-			case 195: break;
-			case 196: break;
-			case 197: break;
-			case 198: break;
-			case 199: break;
+			case 100: nop(); break;
+			case 101: nop(); break;
+			case 102: nop(); break;
+			case 103: nop(); break;
+			case 104: nop(); break;
+			case 105: nop(); break;
+			case 106: nop(); break;
+			case 107: nop(); break;
+			case 108: nop(); break;
+			case 109: nop(); break;
+			case 110: nop(); break;
+			case 111: nop(); break;
+			case 112: nop(); break;
+			case 113: nop(); break;
+			case 114: nop(); break;
+			case 115: nop(); break;
+			case 116: nop(); break;
+			case 117: nop(); break;
+			case 118: nop(); break;
+			case 119: nop(); break;
+			case 120: nop(); break;
+			case 121: nop(); break;
+			case 122: nop(); break;
+			case 123: nop(); break;
+			case 124: nop(); break;
+			case 125: nop(); break;
+			case 126: nop(); break;
+			case 127: nop(); break;
+			case 128: nop(); break;
+			case 129: nop(); break;
+			case 130: nop(); break;
+			case 131: nop(); break;
+			case 132: nop(); break;
+			case 133: nop(); break;
+			case 134: nop(); break;
+			case 135: nop(); break;
+			case 136: nop(); break;
+			case 137: nop(); break;
+			case 138: nop(); break;
+			case 139: nop(); break;
+			case 140: nop(); break;
+			case 141: nop(); break;
+			case 142: nop(); break;
+			case 143: nop(); break;
+			case 144: nop(); break;
+			case 145: nop(); break;
+			case 146: nop(); break;
+			case 147: nop(); break;
+			case 148: nop(); break;
+			case 149: nop(); break;
+			case 150: nop(); break;
+			case 151: nop(); break;
+			case 152: nop(); break;
+			case 153: nop(); break;
+			case 154: nop(); break;
+			case 155: nop(); break;
+			case 156: nop(); break;
+			case 157: nop(); break;
+			case 158: nop(); break;
+			case 159: nop(); break;
+			case 160: nop(); break;
+			case 161: nop(); break;
+			case 162: nop(); break;
+			case 163: nop(); break;
+			case 164: nop(); break;
+			case 165: nop(); break;
+			case 166: nop(); break;
+			case 167: nop(); break;
+			case 168: nop(); break;
+			case 169: nop(); break;
+			case 170: nop(); break;
+			case 171: nop(); break;
+			case 172: nop(); break;
+			case 173: nop(); break;
+			case 174: nop(); break;
+			case 175: nop(); break;
+			case 176: nop(); break;
+			case 177: nop(); break;
+			case 178: nop(); break;
+			case 179: nop(); break;
+			case 180: nop(); break;
+			case 181: nop(); break;
+			case 182: nop(); break;
+			case 183: nop(); break;
+			case 184: nop(); break;
+			case 185: nop(); break;
+			case 186: nop(); break;
+			case 187: nop(); break;
+			case 188: nop(); break;
+			case 189: nop(); break;
+			case 190: nop(); break;
+			case 191: nop(); break;
+			case 192: nop(); break;
+			case 193: nop(); break;
+			case 194: nop(); break;
+			case 195: nop(); break;
+			case 196: nop(); break;
+			case 197: nop(); break;
+			case 198: nop(); break;
+			case 199: nop(); break;
 
-			case 200: break;
-			case 201: break;
-			case 202: break;
-			case 203: break;
-			case 204: break;
-			case 205: break;
-			case 206: break;
-			case 207: break;
-			case 208: break;
-			case 209: break;
-			case 210: break;
-			case 211: break;
-			case 212: break;
-			case 213: break;
-			case 214: break;
-			case 215: break;
-			case 216: break;
-			case 217: break;
-			case 218: break;
-			case 219: break;
-			case 220: break;
-			case 221: break;
-			case 222: break;
-			case 223: break;
-			case 224: break;
-			case 225: break;
-			case 226: break;
-			case 227: break;
-			case 228: break;
-			case 229: break;
-			case 230: break;
-			case 231: break;
-			case 232: break;
-			case 233: break;
-			case 234: break;
-			case 235: break;
-			case 236: break;
-			case 237: break;
-			case 238: break;
-			case 239: break;
-			case 240: break;
-			case 241: break;
-			case 242: break;
-			case 243: break;
-			case 244: break;
-			case 245: break;
-			case 246: break;
-			case 247: break;
-			case 248: break;
-			case 249: break;
-			case 250: break;
-			case 251: break;
+			case 200: nop(); break;
+			case 201: nop(); break;
+			case 202: nop(); break;
+			case 203: nop(); break;
+			case 204: nop(); break;
+			case 205: nop(); break;
+			case 206: nop(); break;
+			case 207: nop(); break;
+			case 208: nop(); break;
+			case 209: nop(); break;
+			case 210: nop(); break;
+			case 211: nop(); break;
+			case 212: nop(); break;
+			case 213: nop(); break;
+			case 214: nop(); break;
+			case 215: nop(); break;
+			case 216: nop(); break;
+			case 217: nop(); break;
+			case 218: nop(); break;
+			case 219: nop(); break;
+			case 220: nop(); break;
+			case 221: nop(); break;
+			case 222: nop(); break;
+			case 223: nop(); break;
+			case 224: nop(); break;
+			case 225: nop(); break;
+			case 226: nop(); break;
+			case 227: nop(); break;
+			case 228: nop(); break;
+			case 229: nop(); break;
+			case 230: nop(); break;
+			case 231: nop(); break;
+			case 232: nop(); break;
+			case 233: nop(); break;
+			case 234: nop(); break;
+			case 235: nop(); break;
+			case 236: nop(); break;
+			case 237: nop(); break;
+			case 238: nop(); break;
+			case 239: nop(); break;
+			case 240: nop(); break;
+			case 241: nop(); break;
+			case 242: nop(); break;
+			case 243: nop(); break;
+			case 244: nop(); break;
+			case 245: nop(); break;
+			case 246: nop(); break;
+			case 247: nop(); break;
+			case 248: nop(); break;
+			case 249: nop(); break;
+			case 250: nop(); break;
+			case 251: nop(); break;
 
 /* --------------------------------------- EXT GROUP ------------------------------------- */
 
-			case 252: break;
-			case 253: break;
-			case 254: break;
+			case 252: nop(); break;
+			case 253: nop(); break;
+			case 254: nop(); break;
 			case 255: // extended
-				if ( m_memory.data[m_pc] != 255 ) {
+				if ( data[pc] != 255 ) {
 					incPC(sizeof(vmByte));
 				}
 			break;
 
 		}
 
-		// Normalize m_pc
-		if ( m_pc >= memsize ) m_pc = 0;
-		else if ( m_pc < 0 ) m_pc = 0;
-
-		// Normalize m_sp
-		if ( m_sp >= memsize ) m_sp = memsize;
-		else if ( m_sp < 0 ) m_sp = 0;
+		pc = pc<memsize?pc:0;
+		sp = sp<memsize?sp:0;
 
 	}
 
+	m_time_left = time_left;
+	m_pc = pc;
+	m_sp = sp;
 }
 
 

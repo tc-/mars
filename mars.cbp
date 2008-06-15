@@ -25,6 +25,7 @@
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-g" />
+					<Add directory="src" />
 				</Compiler>
 			</Target>
 			<Target title="Client-Release">
@@ -35,6 +36,7 @@
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-O2" />
+					<Add directory="src" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
@@ -48,6 +50,7 @@
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-g" />
+					<Add directory="src" />
 				</Compiler>
 			</Target>
 			<Target title="Server-Release">
@@ -58,10 +61,34 @@
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-O2" />
+					<Add directory="src" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
 				</Linker>
+			</Target>
+			<Target title="Benchmark">
+				<Option output="mars" prefix_auto="1" extension_auto="1" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-march=i486" />
+					<Add option="-fexpensive-optimizations" />
+					<Add option="-O3" />
+					<Add directory="src" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+			<Target title="Benchmark Debug">
+				<Option output="mars" prefix_auto="1" extension_auto="1" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+					<Add directory="src" />
+				</Compiler>
 			</Target>
 		</Build>
 		<Compiler>
@@ -71,26 +98,22 @@
 		<Unit filename="src/bot/io.h" />
 		<Unit filename="src/bot/memory.cpp" />
 		<Unit filename="src/bot/memory.h" />
-		<Unit filename="src/bot/stack.cpp" />
-		<Unit filename="src/bot/stack.h" />
 		<Unit filename="src/client/main.cpp">
 			<Option target="Client-Debug" />
 			<Option target="Client-Release" />
 		</Unit>
-		<Unit filename="src/interpreter/interpreter.h" />
-		<Unit filename="src/interpreter/vm.cpp" />
-		<Unit filename="src/interpreter/vm.h" />
 		<Unit filename="src/server/main.cpp">
 			<Option target="Server-Debug" />
 			<Option target="Server-Release" />
 		</Unit>
+		<Unit filename="src/test/benchmark.cpp">
+			<Option target="Benchmark" />
+			<Option target="Benchmark Debug" />
+		</Unit>
+		<Unit filename="src/test/memorytest.cpp">
+			<Option target="Test" />
+		</Unit>
 		<Unit filename="src/test/test.cpp">
-			<Option target="Test" />
-		</Unit>
-		<Unit filename="src/test/testinterpreter.cpp">
-			<Option target="Test" />
-		</Unit>
-		<Unit filename="src/test/testinterpreter.h">
 			<Option target="Test" />
 		</Unit>
 		<Unit filename="src/test/testlib.cpp">
@@ -99,6 +122,12 @@
 		<Unit filename="src/test/testlib.h">
 			<Option target="Test" />
 		</Unit>
+		<Unit filename="src/test/testvm.cpp">
+			<Option target="Test" />
+		</Unit>
+		<Unit filename="src/vm/vm.cpp" />
+		<Unit filename="src/vm/vm.h" />
+		<Unit filename="src/vm/vmtypes.h" />
 		<Extensions>
 			<envvars />
 			<code_completion />

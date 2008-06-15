@@ -16,6 +16,14 @@ class VM;
 
 typedef void (VM::*interpretFunc)();
 
+enum Interrupts
+{
+	intDivideByZero=0,
+	intSoftware=1
+};
+
+#define numInterruptVectors 2
+
 class VM
 {
 	public:
@@ -36,6 +44,8 @@ class VM
 
 		void reset( unsigned int pc, unsigned int sp );
 
+		void interrupt( Interrupts interrupt );
+
 	protected:
 
 		Memory& m_memory;
@@ -44,9 +54,7 @@ class VM
 		unsigned int m_sp;
 		unsigned int m_bos;
 		unsigned int m_time_left;
-
-		//void interpretBC();
-
+		vmUInt m_ints[numInterruptVectors];
 };
 
 }

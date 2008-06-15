@@ -1,6 +1,5 @@
 
 #include <iostream>
-#include "bot/memory.h"
 #include "testlib.h"
 
 using namespace test;
