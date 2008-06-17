@@ -4,6 +4,7 @@
 #include <stdexcept>
 #include <iostream>
 #include <climits>
+#include <string.h>
 
 #include "io.h"
 
@@ -29,6 +30,7 @@ class Memory: public IO
 		void load( std::istream& stream, const unsigned int& toLocation = 0 ) throw ( std::invalid_argument );
 		void save( std::ostream& stream, const unsigned int& startPos = 0, const unsigned int& length = UINT_MAX ) throw ( std::invalid_argument );
 
+		std::string disasm( unsigned int startPos = 0, unsigned int endPos = UINT_MAX );
 	private:
 
 		unsigned int m_size;

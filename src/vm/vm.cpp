@@ -14,6 +14,7 @@
 #define readUInt(index) (*((vmUInt*)&data[index]))
 
 #define readSByte(index) (*((vmSByte*)&data[index]))
+#define sbyteRef(index) (*((vmSByte*)&data[index]))
 
 #define readByte(index) (data[index])
 #define byteRef(index) (data[index])
@@ -57,7 +58,7 @@ void nop()
 {
 }
 
-// 3796650 -> 4001600 -> 5084575 -> 6040825 -> 7549540
+
 void VM::update()
 {
 	m_time_left += m_speed;
@@ -273,7 +274,7 @@ void VM::update()
 				nop();
 			break;
 
-/* ------------------------------------ UNDEFINED GROUP ---------------------------------- */
+/* ------------------------------------ INTERRUPT GROUP ---------------------------------- */
 
 			case 56: // swi
 				nop();
@@ -288,9 +289,26 @@ void VM::update()
 				nop();
 			break;
 
-			case 60: nop(); break;
-			case 61: nop(); break;
-			case 62: nop(); break;
+/* ------------------------------------ CMP GROUP ---------------------------------- */
+
+			case 60: // icmp
+				if ( readInt( sp-sizeof(vmInt) ) == readInt( sp-2*sizeof(vmInt) ) ) sbyteRef( sp-2*sizeof(vmInt) ) = 0;
+				else if ( readInt( sp-sizeof(vmInt) ) > readInt( sp-2*sizeof(vmInt) ) ) sbyteRef( sp-2*sizeof(vmInt) ) = 1;
+				else sbyteRef( sp-2*sizeof(vmInt) ) = -1;
+				incSP(sizeof(vmSByte)-2*sizeof(vmUInt));
+			break;
+			case 61: // iucmp
+				if ( readUInt( sp-sizeof(vmUInt) ) == readUInt( sp-2*sizeof(vmUInt) ) ) sbyteRef( sp-2*sizeof(vmUInt) ) = 0;
+				else if ( readUInt( sp-sizeof(vmUInt) ) > readUInt( sp-2*sizeof(vmUInt) ) ) sbyteRef( sp-2*sizeof(vmUInt) ) = 1;
+				else sbyteRef( sp-2*sizeof(vmInt) ) = -1;
+				incSP(sizeof(vmSByte)-2*sizeof(vmUInt));
+			break;
+			case 62: // itest
+				if ( readInt( sp-sizeof(vmInt) ) == 0 ) sbyteRef( sp-sizeof(vmInt) ) = 0;
+				else if ( readInt( sp-sizeof(vmInt) ) > 0 ) sbyteRef( sp-sizeof(vmInt) ) = 1;
+				else sbyteRef( sp-sizeof(vmInt) ) = -1;
+				incSP(sizeof(vmSByte)-sizeof(vmUInt));
+			break;
 			case 63: nop(); break;
 
 			case 64: nop(); break;
