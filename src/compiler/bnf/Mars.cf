@@ -1,0 +1,52 @@
+comment "//" ;
+comment "{" "}" ;
+comment "(*" "*)";
+
+Prog. ProgramFile ::= Program Using [Function];
+
+PDec.  Program     ::= "program" Ident ;
+Uses.  Using       ::= "uses" [Modules] ;
+NoUse. Using       ::= ;
+
+terminator Function "";
+Fun.   Function    ::= "function" Ident "(" Declare ")" Declare Block;
+
+Blk. Block ::= "begin" [Stm] "end" ;
+
+Mods. Modules     ::= Ident ;
+separator Modules "," ;
+
+NoDecl.  Declare ::= ;
+VarDecl. Declare ::= "var" [Vars] ;
+
+VDec. Vars ::= [Ident] ":" Type ;
+
+separator nonempty Vars "," ;
+separator nonempty Ident "," ;
+
+terminator Stm "" ;
+SAss. Stm ::= Ident ":=" Exp ;
+SIf.  Stm ::= IfStm;
+
+IfEmp. IfStm ::= "if" Exp "then" Block;
+IfEls. IfStm ::= "if" Exp "then" Block "else" Else;
+
+ElsEm. Else ::= Block ;
+ElsIf. Else ::= IfStm ;
+
+EAdd. Exp ::= Exp "+" Exp1 ;
+ESub. Exp ::= Exp "-" Exp1 ;
+EDiv. Exp1 ::= Exp1 "/" Exp2 ;
+EMul. Exp1 ::= Exp1 "*" Exp2 ;
+EMod. Exp1 ::= Exp1 "mod" Exp2 ;
+ECll. Exp2 ::= Ident "(" [Exp] ")";
+EInt. Exp3 ::= Integer ;
+EVar. Exp3 ::= Ident ;
+
+coercions Exp 3;
+
+separator Exp "," ;
+
+TInt.  Type ::= "integer" ;
+TBool. Type ::= "boolean" ;
+TRec.  Type ::= Ident ;
