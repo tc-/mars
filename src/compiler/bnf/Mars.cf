@@ -34,6 +34,16 @@ IfEls. IfStm ::= "if" Exp "then" Block "else" Else;
 ElsEm. Else ::= Block ;
 ElsIf. Else ::= IfStm ;
 
+EOr.   Exp  ::= Exp "or" Exp1;
+EAnd.  Exp1 ::= Exp1 "and" Exp2 ;
+
+EBOr.  Exp2 ::= Exp2 "&" Exp3 ;
+EXor.  Exp3 ::= Exp1 "k";
+
+EBAnd. Exp ::= Exp "|" Exp1 ;
+EShl.  Exp ::= Exp "shl" Exp1 ;
+EShr.  Exp ::= Exp "shr" Exp1 ;
+
 EAdd. Exp ::= Exp "+" Exp1 ;
 ESub. Exp ::= Exp "-" Exp1 ;
 EDiv. Exp1 ::= Exp1 "/" Exp2 ;
@@ -43,7 +53,59 @@ ECll. Exp2 ::= Ident "(" [Exp] ")";
 EInt. Exp3 ::= Integer ;
 EVar. Exp3 ::= Ident ;
 
-coercions Exp 3;
+Elor.         Exp   ::= Exp "||"  Exp1;
+Eland.        Exp1  ::= Exp1 "&&" Exp2;
+Ebitor.       Exp2  ::= Exp2 "|"  Exp3;
+Ebitexor.     Exp3  ::= Exp3 "^"  Exp4;
+Ebitand.      Exp4  ::= Exp4 "&"  Exp5;
+Eeq.          Exp5  ::= Exp5 "="  Exp6;
+Eneq.         Exp5  ::= Exp5 "<>" Exp6;
+Elthen.       Exp6  ::= Exp6 "<"  Exp7;
+Egrthen.      Exp6  ::= Exp6 ">"  Exp7;
+Ele.          Exp6  ::= Exp6 "<=" Exp7;
+Ege.          Exp6  ::= Exp6 ">=" Exp7;
+Eleft.        Exp7  ::= Exp7 "shl" Exp8;
+Eright.       Exp7  ::= Exp7 "shr" Exp8;
+Eplus.        Exp8  ::= Exp8 "+" Exp9;
+Eminus.       Exp8  ::= Exp8 "-" Exp9;
+Etimes.       Exp9  ::= Exp9 "*" Exp10;
+Ediv.         Exp9  ::= Exp9 "/" Exp10;
+Emod.         Exp9  ::= Exp9 "mod" Exp10;
+Epreop.       Exp10 ::= Unary_operator Exp9;
+Epreinc.      Exp10 ::= "++" Exp10;
+Epredec.      Exp10 ::= "--" Exp10;
+Efunk.        Exp11 ::= Ident "(" ")" ;
+Efunkpar.     Exp11 ::= Ident "(" [Exp] ")" ;
+Epostinc.     Exp12 ::= Exp12 "++";
+Epostdec.     Exp12 ::= Exp12 "--";
+Earr.         Exp13 ::= ArrAcc;
+Efld.         Exp13 ::= FieldAcc;
+Econst.       Exp13 ::= Constant;
+Estring.      Exp13 ::= String;
+Evar.         Exp14 ::= Ident;
+
+Negative.    Unary_operator ::= "-" ;
+Logicalneg.  Unary_operator ::= "~" ;
+
+
+Aarr.		 ArrAcc ::= Ident "[" Exp "]";
+
+Ffvar.		 FieldAcc ::= SpecExp "." Ident;
+
+Cep.		SpecExp ::= "(" Exp ")";
+Cnp.		SpecExp ::= SpecExpNP;
+
+CNLit.		SpecExpNP ::= Constant;
+CNParr.		SpecExpNP ::= ArrAcc;
+CNPfld.		SpecExpNP ::= FieldAcc;
+
+Cfloat.        Constant ::= Double;
+Cint.          Constant ::= Integer;
+Ctrue.	       Constant ::= "true";
+Cfalse.	       Constant ::= "false";
+
+
+coercions Exp 14;
 
 separator Exp "," ;
 
