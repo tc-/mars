@@ -1,4 +1,6 @@
 
+#include <fstream>
+
 #include "vm/vm.h"
 #include "bot/memory.h"
 #include "testlib.h"
@@ -16,6 +18,8 @@ void testInstructionsCMP();
 
 void doVMBenchmark();
 //void testDisasm();
+
+bool readInt( Memory& m, unsigned int index,  int expect );
 
 void testVM()
 {
@@ -46,6 +50,15 @@ void testVM()
 	if (vm.getPC() != 0) success = false;
 	vm.setPC(10);
 	if (vm.getPC() != 0) success = false;
+	printTestResult( success );
+
+	printTestStart("load()");
+	success =true;
+	std::ifstream f("loadfiles/looptest.bot");
+	vm.load(f);
+	vm.step(4);
+	if ( !readInt(m, 4, 2) ) success = false;
+
 	printTestResult( success );
 
 	printTestResult();

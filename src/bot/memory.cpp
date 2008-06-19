@@ -103,12 +103,17 @@ std::string asmLine( const int& pos, const std::string& nem, const std::string& 
 
 std::string Memory::disasm( unsigned int startPos, unsigned int endPos )
 {
+	if ( endPos > startPos ) {
+		unsigned int tmp = endPos;
+		endPos = startPos;
+		startPos = tmp;
+	}
 	endPos = std::min(m_size-1, endPos );
+	int i = std::min( startPos, endPos );
 
 	std::string ret = "";
 	int pos;
 
-	int i = startPos;
 	while ( i <= endPos ) {
 
 		switch ( data[i++] ) {

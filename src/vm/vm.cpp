@@ -36,9 +36,11 @@ VM::VM( Memory& memory, unsigned int cpu_speed, unsigned int sp ) :
 {
 }
 
+
 VM::~VM()
 {
 }
+
 
 void VM::reset( unsigned int pc, unsigned int sp )
 {
@@ -49,10 +51,67 @@ void VM::reset( unsigned int pc, unsigned int sp )
 	for( unsigned int i = 0; i < numInterruptVectors; i++ ) m_ints[i] = UINT_MAX;
 }
 
+
 void VM::interrupt( Interrupts interrupt )
 {
 
 }
+
+
+void VM::step()
+{
+	unsigned int speed = m_speed;
+	m_speed = 1;
+	m_time_left = 0;
+	update();
+	m_speed = speed;
+}
+
+
+void VM::step( unsigned int steps )
+{
+	for ( int i = 0; i < steps; i++ ) step();
+}
+
+
+void VM::printState()
+{
+	std::cout << "pc: " << m_pc << " next instruction: " + m_memory.disasm(m_pc,m_pc);
+	std::cout << "sp: " << (m_sp - m_bos) << std::endl;
+}
+
+
+void VM::load( std::istream& data )
+{
+	char magic[4];
+	magic[3] = 0;
+
+	data.get( &magic[0], 3 );
+
+	if ( std::string(&magic[0]) != "BOT" ) throw std::runtime_error("Magic signature does not match 'BOT'.");
+
+	unsigned int pc, sp, bos, memSize;
+
+	data >> pc >> bos >> sp >> memSize;
+
+	if ( !data.good() ) throw std::runtime_error("Could not read header.");
+
+	if ( m_memory.size() < memSize ) throw std::runtime_error("Memory space too small to load file.");
+
+	m_memory.load(data);
+
+	reset( pc, bos );
+	setSP(sp);
+}
+
+
+void VM::save( std::ostream& data )
+{
+	data << 'B' << 'O' << 'T';
+	data << m_pc << m_bos << m_sp << m_memory.size();
+	m_memory.save(data);
+}
+
 
 void nop()
 {

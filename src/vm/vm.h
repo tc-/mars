@@ -1,6 +1,8 @@
 #ifndef VM_H
 #define VM_H
 
+#include <iostream>
+
 #include "bot/memory.h"
 
 namespace bot {
@@ -45,6 +47,13 @@ class VM
 		void reset( unsigned int pc, unsigned int sp );
 
 		void interrupt( Interrupts interrupt );
+
+		void step();
+		void step( unsigned int steps );
+		void printState();
+
+		void load( std::istream& data );
+		void save( std::ostream& data );
 
 	protected:
 
