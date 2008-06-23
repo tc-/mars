@@ -1,5 +1,5 @@
 all:
-	cd bnf && bnfc -m -cpp Mars.cf
-	cd bnf && make
+	cd src && bnfc -m -haskell Mars.cf
+	cd src && make
 clean:
-	cd bnf && make distclean
+	cd src && make distclean
