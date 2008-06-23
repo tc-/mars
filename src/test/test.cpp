@@ -13,6 +13,8 @@ int main( int argc, char** argv )
 	std::cout << "## MARS kikkass test suite executing ##" << std::endl;
 	std::cout << "#######################################" << std::endl;
 
+	std::cout << std::getenv("PWD") << std::endl;
+
 	testMemory();
 	testVM();
 

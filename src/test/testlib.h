@@ -2,6 +2,7 @@
 #define TESTLIB_H
 
 #include <string>
+#include <stdexcept>
 
 namespace test
 {
@@ -13,6 +14,8 @@ void printTestStart( std::string name );
 void printTestResult( bool success );
 
 bool printGlobalTestResult();
+
+void printException( std::exception& e );
 
 }
 

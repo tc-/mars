@@ -54,8 +54,12 @@ void testVM()
 
 	printTestStart("load()");
 	success =true;
-	std::ifstream f("loadfiles/looptest.bot");
-	vm.load(f);
+	try {
+		std::ifstream f("test/loadfiles/looptest.bot", std::ifstream::in);
+		vm.load(f);
+	} catch ( std::exception& e ) {
+		printException(e);
+	}
 	vm.step(4);
 	if ( !readInt(m, 4, 2) ) success = false;
 

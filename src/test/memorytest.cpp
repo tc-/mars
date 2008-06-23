@@ -65,7 +65,7 @@ void testMemory()
 	success = true;
 	std::stringstream s2;
 	m.save(s2);
-	unsigned char c;
+
 	for ( unsigned char i = 0; i < 100; i++ ) {
 		if ( s2.get() != i )
 			success = false;

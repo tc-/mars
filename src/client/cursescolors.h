@@ -1,0 +1,7 @@
+#ifndef CURSESCOLORS_H
+#define CURSESCOLORS_H
+
+#define COLOR_MENU_ITEM 8
+#define COLOR_MENU_BG 9
+
+#endif // CURSESCOLORS

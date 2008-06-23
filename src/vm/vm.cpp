@@ -70,7 +70,7 @@ void VM::step()
 
 void VM::step( unsigned int steps )
 {
-	for ( int i = 0; i < steps; i++ ) step();
+	for ( unsigned int i = 0; i < steps; i++ ) step();
 }
 
 
@@ -83,16 +83,23 @@ void VM::printState()
 
 void VM::load( std::istream& data )
 {
-	char magic[4];
-	magic[3] = 0;
+	if ( !data.good() ) throw std::runtime_error("Instream not good.");
 
-	data.get( &magic[0], 3 );
-
-	if ( std::string(&magic[0]) != "BOT" ) throw std::runtime_error("Magic signature does not match 'BOT'.");
+	char magic[4] = "BOT";
+  unsigned char c = 0;
+	for (int i = 0; i < 3; i++ ) {
+		data >> c;
+		if ( c != magic[i] ) {
+			throw std::runtime_error("Magic signature does not match 'BOT'.");
+		}
+	}
 
 	unsigned int pc, sp, bos, memSize;
-
-	data >> pc >> bos >> sp >> memSize;
+	data.read( (char*)&pc, sizeof(unsigned int) );
+	data.read( (char*)&bos, sizeof(unsigned int) );
+	data.read( (char*)&sp, sizeof(unsigned int) );
+	data.read( (char*)&memSize, sizeof(unsigned int) );
+	//data >> pc >> bos >> sp >> memSize;
 
 	if ( !data.good() ) throw std::runtime_error("Could not read header.");
 

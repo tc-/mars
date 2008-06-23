@@ -109,7 +109,7 @@ std::string Memory::disasm( unsigned int startPos, unsigned int endPos )
 		startPos = tmp;
 	}
 	endPos = std::min(m_size-1, endPos );
-	int i = std::min( startPos, endPos );
+	unsigned int i = std::min( startPos, endPos );
 
 	std::string ret = "";
 	int pos;
