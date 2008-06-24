@@ -17,9 +17,8 @@ MenuWindow::~MenuWindow()
 
 void MenuWindow::repaint()
 {
-	wborder(m_win, '|', '|', '-', '-', '+', '+', '+', '+');
-
-	attron(COLOR_PAIR(COLOR_MENU_ITEM));
+	box(m_win, 0, 0);
+	wattron(m_win, COLOR_PAIR(COLOR_MENU_ITEM));
 
 	if ( m_menu != 0 ) {
 
@@ -27,14 +26,16 @@ void MenuWindow::repaint()
 		int i = 0;
 		for ( it = m_menu->m_items.begin(); it != m_menu->m_items.end(); it++ ) {
 			i += 2;
-			(*it)->draw( getCursesWindow(), m_x+2, m_y+i );
+			(*it)->draw( m_win, m_x+2, m_y+i );
 		}
 
 	}
 
-	attroff(COLOR_PAIR(COLOR_MENU_ITEM));
+	wattroff(m_win, COLOR_PAIR(COLOR_MENU_ITEM));
 
+	wrefresh(m_win);
 	CursesWindow::repaint();
+
 }
 
 }

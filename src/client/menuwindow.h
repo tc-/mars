@@ -24,9 +24,9 @@ class MenuItem
 		MenuItem( const std::string& text, MenuItemAction* action ): m_text(text),m_action(action) { }
 
 		virtual void draw( WINDOW* win, const int& x, const int& y ) {
-			move(y,x); addch(' ');
-			for ( unsigned int i = 0; i < m_text.length(); i++ ) addch(m_text[i]);
-			addch(' ');
+			wmove(win,y,x); waddch(win, ' ');
+			for ( unsigned int i = 0; i < m_text.length(); i++ ) waddch(win,m_text[i]);
+			waddch(win, ' ');
 		}
 
 	protected:

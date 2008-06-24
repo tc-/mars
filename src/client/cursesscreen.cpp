@@ -47,6 +47,7 @@ CursesScreen::~CursesScreen()
 
 void CursesScreen::repaint()
 {
+	if ( m_center != 0 ) m_center->repaint();
 }
 
 CursesWindow* CursesScreen::getEast()

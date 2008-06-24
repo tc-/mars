@@ -46,6 +46,7 @@ void CursesWindow::destroyWin()
 
 void CursesWindow::repaint()
 {
+	wmove(m_win,0 ,0);
 	wrefresh(m_win);
 	m_updated = true;
 }
@@ -77,7 +78,7 @@ void CursesWindow::boundry( const int& width, const int& height, const int& x, c
 {
 	destroyWin();
 	m_win = newwin(height, width, y, x);
-	box(m_win, 0 , 0);
+	//box(m_win, 0 , 0);
 	wrefresh(m_win);
 	m_width = width;
 	m_height = height;

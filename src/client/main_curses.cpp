@@ -26,8 +26,9 @@ void init()
 
 	Menu* m = new Menu();
 	m->addItem( "Test", 0 );
+	m->addItem( "Menu", 0 );
 
-	screen->setCenter( new MenuWindow( m ) );
+	screen->setEast( new MenuWindow( m ) );
 
 	signal(SIGINT, finalize);
 }
