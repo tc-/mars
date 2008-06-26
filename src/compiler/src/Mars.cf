@@ -39,10 +39,10 @@ CSother. CaseStm ::= "otherwise" ":" Stm ;
 separator nonempty CaseStm "";
 
 IfEmp. IfStm ::= "if" Exp "then" Stm;
-IfEls. IfStm ::= "if" Exp "then" Stm "else" Else;
+IfEls. IfStm ::= "if" Exp "then" Stm "else" SElse;
 
-ElsEm. Else ::= Stm ;
-ElsIf. Else ::= IfStm ;
+ElsEm. SElse ::= Stm ;
+ElsIf. SElse ::= IfStm ;
 
 EOr.   Exp  ::= Exp "or" Exp1;
 EAnd.  Exp1 ::= Exp1 "and" Exp2 ;
