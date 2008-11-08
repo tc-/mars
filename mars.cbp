@@ -98,10 +98,6 @@
 		<Unit filename="src/bot/io.h" />
 		<Unit filename="src/bot/memory.cpp" />
 		<Unit filename="src/bot/memory.h" />
-		<Unit filename="src/client/main.cpp">
-			<Option target="Client-Debug" />
-			<Option target="Client-Release" />
-		</Unit>
 		<Unit filename="src/server/main.cpp">
 			<Option target="Server-Debug" />
 			<Option target="Server-Release" />
