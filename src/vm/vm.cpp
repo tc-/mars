@@ -127,14 +127,14 @@ void nop()
 
 void VM::update()
 {
-	m_time_left += m_speed;
-
-	unsigned int memsize = m_memory.size();;
-	vmByte* data = m_memory.data;
-	vmUInt pos;
-	int time_left = m_time_left;
+	unsigned int memsize = m_memory.size();
 	unsigned int pc = m_pc;
 	unsigned int sp = m_sp;
+	int time_left = m_time_left + m_speed;
+	vmByte* data = m_memory.data;
+	vmUInt pos;
+
+	m_time_left = time_left;
 
 	while ( time_left-- > 0 ) {
 
@@ -582,8 +582,10 @@ void VM::update()
 
 		}
 
-		pc = pc<memsize?pc:0;
-		sp = sp<memsize?sp:0;
+    if ( pc >= memsize ) pc = 0;
+    if ( sp >= memsize ) sp = 0;
+		//pc = pc<memsize?pc:0;
+		//sp = sp<memsize?sp:0;
 
 	}
 
