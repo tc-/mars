@@ -37,7 +37,7 @@ void Memory::writeByte( unsigned int index, const vmByte& indata ) throw ( std::
 
 void Memory::clear()
 {
-	for ( unsigned int i = 0; i < m_size; i++ ) data[i] = 0;
+	for ( int i = -15; i < (int)m_size+15; i++ ) data[i] = 0;
 }
 
 
