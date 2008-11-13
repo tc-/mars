@@ -8,7 +8,15 @@ program botcode
   Alternative multi line comment
 *)
 
-uses time // unit include
+uses time, system // unit includes
+
+
+const // constant declaration block
+   pi: Decimal = 3.14 // declaraion of fixed point deciaml number
+
+var // var declaration block outside function is treated as global
+  global: Number // global variable
+
 
 function functionWithReturnValueAndParams( var num: Number pos: Position ): Number forward // Forward declaration of function
 
@@ -33,10 +41,10 @@ begin
   b := (i1 = i2) xor (i1 <> i2) // logical xor
   b := not (i1 <> i2) // logical not
 
-  num := ~num // Bitwize not
-  num := num or num // Bitwize or (Type is not Boolean)
-  num := num and num // Bitwize and
-  num := num xor num // Bitwize xor
+  num := ~num // Bitwise not
+  num := num or num // Bitwise or (Type is not Boolean)
+  num := num and num // Bitwise and
+  num := num xor num // Bitwise xor
   num := num shr 3 // Shift right
   num := num shl 3 // Shift left
 end
@@ -57,11 +65,6 @@ begin
   end
 end
 
-const // constant declaration block
-   pi: Decimal = 3.14 // declaraion of fixed point deciaml number
-
-var // var declaration block outside function is treated as global
-  global: Number // global variable
 
 begin // "main" function
 

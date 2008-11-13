@@ -10,11 +10,13 @@ class Bot
 
 	public:
 
-		Bot( VM& vm, BotId id );
+		Bot( VM& vm, BotId id, Position pos ):m_vm(vm),m_id(id),m_pos(pos){}
 
 	private:
 
-
+		VM& m_vm;
+		BotId m_id;
+		Position m_pos;
 
 };
 

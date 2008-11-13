@@ -5,11 +5,6 @@
 
 #include "bot/memory.h"
 
-namespace bot {
-class IO;
-}
-
-using namespace bot;
 
 namespace vm
 {
@@ -30,7 +25,7 @@ class VM
 {
 	public:
 
-		VM( Memory& memory, unsigned int cpu_speed, unsigned int sp );
+		VM( bot::Memory& memory, unsigned int cpu_speed, unsigned int sp );
 		virtual ~VM();
 
 		void update();
@@ -57,7 +52,7 @@ class VM
 
 	protected:
 
-		Memory& m_memory;
+		bot::Memory& m_memory;
 		unsigned int m_speed;
 		unsigned int m_pc;
 		unsigned int m_sp;

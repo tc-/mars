@@ -46,14 +46,14 @@ vmSByte IO::readSByte( unsigned int index )
 }
 
 
-void IO::writeInt( unsigned int index, const int& data )
+void IO::writeInt( unsigned int index, const vmInt& data )
 {
-	const vmByte* c = reinterpret_cast<const vmByte*>(&data);
-	for ( unsigned int i = 0; i < sizeof(data); i++ ) writeByte(index+i, c[i] );
+	const vmUInt* c = reinterpret_cast<const vmUInt*>(&data);
+	writeUInt(index, *c );
 }
 
 
-void IO::writeUInt( unsigned int index, const unsigned int& data )
+void IO::writeUInt( unsigned int index, const vmUInt& data )
 {
 	const vmByte* c = reinterpret_cast<const vmByte*>(&data);
 	for ( unsigned int i = 0; i < sizeof(data); i++ ) writeByte(index+i, c[i] );
@@ -62,8 +62,8 @@ void IO::writeUInt( unsigned int index, const unsigned int& data )
 
 void IO::writeFloat( unsigned int index, const vmFloat& data )
 {
-	const vmByte* c = reinterpret_cast<const vmByte*>(&data);
-	for ( unsigned int i = 0; i < sizeof(data); i++ ) writeByte(index+i, c[i] );
+	const vmUInt* c = reinterpret_cast<const vmUInt*>(&data);
+	writeUInt(index, *c );
 }
 
 void IO::writeBool( unsigned int index, const vmBool& data )
