@@ -16,6 +16,9 @@
 					<Add option="-g" />
 					<Add directory="src" />
 				</Compiler>
+				<Linker>
+					<Add library="libconfig++" />
+				</Linker>
 			</Target>
 			<Target title="Client-Debug">
 				<Option output="bin/Client-Debug/mars" prefix_auto="1" extension_auto="1" />
@@ -98,6 +101,8 @@
 			<Option compilerVar="CPP" />
 		</Unit>
 		<Unit filename="src/bot/bot.h" />
+		<Unit filename="src/bot/botspec.cpp" />
+		<Unit filename="src/bot/botspec.h" />
 		<Unit filename="src/bot/engineio.cpp" />
 		<Unit filename="src/bot/engineio.h" />
 		<Unit filename="src/server/main.cpp">
