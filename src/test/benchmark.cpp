@@ -2,10 +2,9 @@
 #include <ctime>
 
 #include "vm/vm.h"
-#include "bot/memory.h"
+#include "vm/memory.h"
 
 using namespace vm;
-using namespace bot;
 
 void doVMBenchmark();
 
@@ -21,11 +20,12 @@ int main( int argc, char** argv )
 }
 
 
-unsigned int counter;
+unsigned int counter,testvar;
 
 void incGotoLoop()
 {
 	for ( int i = 0; i < 100; i++ ) {
+		//testvar++;
 		counter++;
 	}
 }

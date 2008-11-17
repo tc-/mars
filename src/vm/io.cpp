@@ -1,7 +1,33 @@
-#include "io.h"
+#include "vm/io.h"
 
-namespace bot
+namespace vm
 {
+
+
+IO* IOFacory::createIO( Setting& sett )
+{
+  std::string type;
+  if ( (sett.lookupValue( "type", type )) && (type != "") ) {
+    FactoryMap::iterator i = m_factorymap.find(type);
+    if ( i->second != 0 ) {
+      return (i->second)(sett);
+    }
+  }
+  return 0;
+}
+
+
+void IOFacory::addIOClass( const std::string& className, iofactoryfunc factory )
+{
+  m_factorymap[className] = factory;
+}
+
+
+void IOFacory::clearIOClasses()
+{
+  m_factorymap.clear();
+}
+
 
 vmInt IO::readInt( unsigned int index )
 {

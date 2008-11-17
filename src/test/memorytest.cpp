@@ -2,11 +2,11 @@
 #include <iostream>
 #include <sstream>
 
-#include "bot/memory.h"
+#include "vm/memory.h"
 #include "testlib.h"
 
 using namespace test;
-using namespace bot;
+using namespace vm;
 
 void testMemory()
 {

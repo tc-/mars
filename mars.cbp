@@ -94,10 +94,12 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
-		<Unit filename="src/bot/io.cpp" />
-		<Unit filename="src/bot/io.h" />
-		<Unit filename="src/bot/memory.cpp" />
-		<Unit filename="src/bot/memory.h" />
+		<Unit filename="src/bot/bot.c">
+			<Option compilerVar="CPP" />
+		</Unit>
+		<Unit filename="src/bot/bot.h" />
+		<Unit filename="src/bot/engineio.cpp" />
+		<Unit filename="src/bot/engineio.h" />
 		<Unit filename="src/server/main.cpp">
 			<Option target="Server-Debug" />
 			<Option target="Server-Release" />
@@ -121,6 +123,13 @@
 		<Unit filename="src/test/testvm.cpp">
 			<Option target="Test" />
 		</Unit>
+		<Unit filename="src/util/position.h" />
+		<Unit filename="src/vm/coreio.cpp" />
+		<Unit filename="src/vm/coreio.h" />
+		<Unit filename="src/vm/io.cpp" />
+		<Unit filename="src/vm/io.h" />
+		<Unit filename="src/vm/memory.cpp" />
+		<Unit filename="src/vm/memory.h" />
 		<Unit filename="src/vm/vm.cpp" />
 		<Unit filename="src/vm/vm.h" />
 		<Unit filename="src/vm/vmtypes.h" />

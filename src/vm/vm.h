@@ -1,9 +1,9 @@
 #ifndef VM_H
 #define VM_H
 
-#include <iostream>
+//#include <iostream>
 
-#include "bot/memory.h"
+#include "vm/memory.h"
 
 
 namespace vm
@@ -25,7 +25,7 @@ class VM
 {
 	public:
 
-		VM( bot::Memory& memory, unsigned int cpu_speed, unsigned int sp );
+		VM( Memory& memory, unsigned int cpu_speed, unsigned int sp );
 		virtual ~VM();
 
 		void update();
@@ -52,7 +52,7 @@ class VM
 
 	protected:
 
-		bot::Memory& m_memory;
+		Memory& m_memory;
 		unsigned int m_speed;
 		unsigned int m_pc;
 		unsigned int m_sp;

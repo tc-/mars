@@ -2,11 +2,10 @@
 #include <fstream>
 
 #include "vm/vm.h"
-#include "bot/memory.h"
+#include "vm/memory.h"
 #include "testlib.h"
 
 using namespace vm;
-using namespace bot;
 using namespace test;
 
 void testInstructionsICONST();

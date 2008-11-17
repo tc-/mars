@@ -8,7 +8,9 @@
 
 #include "io.h"
 
-namespace bot
+namespace bot { class Bot; }
+
+namespace vm
 {
 
 class Memory: public IO
@@ -17,6 +19,10 @@ class Memory: public IO
 
 		Memory( unsigned int size );
 		~Memory();
+
+    std::string className() { return "Memory"; }
+
+    void update( bot::Bot& bot );
 
 		vmByte readByte( unsigned int index ) throw ( std::invalid_argument );
 		void writeByte( unsigned int index, const vmByte& data ) throw ( std::invalid_argument );

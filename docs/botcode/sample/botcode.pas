@@ -25,7 +25,7 @@ var // Variable declaration block
   num: Number // Variable devlaration, type: Number
   pos1, pos2: Position // Multiple declarations
   i1, i2: Number
-  b: Boolean
+  b: Boolean // Boolean is an unsigned byte where 0 repressents false and everything else true
 begin
   num := 1 // Assignment
   i1 := 0

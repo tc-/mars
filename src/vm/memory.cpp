@@ -1,9 +1,10 @@
 #include "memory.h"
+#include "bot/bot.h"
 
 #include <cmath>
 #include <sstream>
 
-namespace bot
+namespace vm
 {
 
 Memory::Memory( unsigned int size )
@@ -18,6 +19,10 @@ Memory::~Memory()
 {
 	data = &data[-15];
 	delete data;
+}
+
+void Memory::update( bot::Bot& bot )
+{
 }
 
 
