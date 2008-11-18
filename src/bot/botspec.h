@@ -19,13 +19,18 @@ class BotSpec
 
     void loadFromFile( const std::string& specFile );
 
-    inline std::string& modelName()  { return m_model; }
-    inline Setting& parts() { return *m_parts; }
+    std::string generateUnitCode();
+
+    bool isOk() { return m_ok; }
+
+    Setting& root() { return *m_root; }
+    Setting& parts() { return *m_parts; }
 
   protected:
 
-    std::string m_model;
+    bool m_ok;
     Setting* m_parts;
+    Setting* m_root;
     Config m_config;
 
   private:

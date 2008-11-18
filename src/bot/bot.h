@@ -3,9 +3,10 @@
 
 #include <vector>
 
-#include "vm/vm.h"
+#include "vm/coreio.h"
 #include "util/position.h"
 #include "bot/botspec.h"
+#include "vm/io.h"
 
 typedef unsigned int BotId;
 
@@ -25,9 +26,12 @@ class Bot
 
     void loadBotSpec( BotSpec& spec );
 
-		vm::VM* m_vm;
+		vm::CoreIO* m_core;
 		BotId m_id;
 		Position m_pos;
+
+		static vm::IOFactory s_iof;
+		static void setupIOFactory();
 
 };
 

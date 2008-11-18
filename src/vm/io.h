@@ -24,7 +24,7 @@ class IO
 
     virtual std::string className() = 0;
 
-    virtual void update( bot::Bot& bot ) = 0;
+    virtual int update( bot::Bot& bot ) = 0;
 
 		virtual vmByte readByte( unsigned int index ) = 0;
 		virtual vmInt readInt( unsigned int index );
@@ -46,7 +46,7 @@ class IO
 };
 
 
-class IOFacory
+class IOFactory
 {
   public:
     IO* createIO( Setting& sett );

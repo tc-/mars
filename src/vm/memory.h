@@ -22,7 +22,7 @@ class Memory: public IO
 
     std::string className() { return "Memory"; }
 
-    void update( bot::Bot& bot );
+    int update( bot::Bot& bot );
 
 		vmByte readByte( unsigned int index ) throw ( std::invalid_argument );
 		void writeByte( unsigned int index, const vmByte& data ) throw ( std::invalid_argument );

@@ -21,8 +21,9 @@ Memory::~Memory()
 	delete data;
 }
 
-void Memory::update( bot::Bot& bot )
+int Memory::update( bot::Bot& bot )
 {
+  return 0;
 }
 
 

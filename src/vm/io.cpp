@@ -4,7 +4,7 @@ namespace vm
 {
 
 
-IO* IOFacory::createIO( Setting& sett )
+IO* IOFactory::createIO( Setting& sett )
 {
   std::string type;
   if ( (sett.lookupValue( "type", type )) && (type != "") ) {
@@ -17,13 +17,13 @@ IO* IOFacory::createIO( Setting& sett )
 }
 
 
-void IOFacory::addIOClass( const std::string& className, iofactoryfunc factory )
+void IOFactory::addIOClass( const std::string& className, iofactoryfunc factory )
 {
   m_factorymap[className] = factory;
 }
 
 
-void IOFacory::clearIOClasses()
+void IOFactory::clearIOClasses()
 {
   m_factorymap.clear();
 }

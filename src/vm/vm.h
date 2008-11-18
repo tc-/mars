@@ -1,8 +1,6 @@
 #ifndef VM_H
 #define VM_H
 
-//#include <iostream>
-
 #include "vm/memory.h"
 
 
@@ -25,7 +23,7 @@ class VM
 {
 	public:
 
-		VM( Memory& memory, unsigned int cpu_speed, unsigned int sp );
+		VM( Memory& memory, unsigned int cpu_speed, unsigned int sp, IO* io );
 		virtual ~VM();
 
 		void update();
@@ -52,6 +50,7 @@ class VM
 
 	protected:
 
+    IO* m_io;
 		Memory& m_memory;
 		unsigned int m_speed;
 		unsigned int m_pc;

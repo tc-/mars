@@ -7,13 +7,10 @@ botspec:
 	weight = 100;
 	armour = "none";
 	health = 20;
+	memorysize = 1024;
+	cpuspeed = 10;
 
 	parts = (
-		{
-			type = "Core";
-			memory = 1024;
-			speed = 10;
-		},
 		{
 			type = "TrackedEngine";
 			alias = "Engine";
