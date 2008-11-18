@@ -104,4 +104,10 @@ void IO::writeSByte( unsigned int index, const vmSByte& data )
 	writeByte(index, *c );
 }
 
+NullIO& NullIO::nullIO()
+{
+  static NullIO n;
+  return n;
+}
+
 }

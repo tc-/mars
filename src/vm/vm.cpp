@@ -26,7 +26,7 @@
 namespace vm
 {
 
-VM::VM( Memory& memory, unsigned int cpu_speed, unsigned int sp, IO* io ) :
+VM::VM( Memory& memory, unsigned int cpu_speed, unsigned int sp, IO& io ) :
   m_io(io),
   m_memory(memory),
   m_speed(cpu_speed),

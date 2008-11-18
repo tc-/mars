@@ -23,7 +23,8 @@ class VM
 {
 	public:
 
-		VM( Memory& memory, unsigned int cpu_speed, unsigned int sp, IO* io );
+
+		VM( Memory& memory, unsigned int cpu_speed, unsigned int sp, IO& io );
 		virtual ~VM();
 
 		void update();
@@ -50,7 +51,7 @@ class VM
 
 	protected:
 
-    IO* m_io;
+    IO& m_io;
 		Memory& m_memory;
 		unsigned int m_speed;
 		unsigned int m_pc;

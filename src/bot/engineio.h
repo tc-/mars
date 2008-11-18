@@ -6,16 +6,26 @@
 namespace bot
 {
 
-class EngineIO : public vm::IO
+class TrackedEngineIO : public vm::IO
 {
   public:
-    EngineIO();
-    ~EngineIO();
+    TrackedEngineIO( const float& forwardSpeed, const float& backwardSpeed );
+    ~TrackedEngineIO();
 
-    virtual void update() = 0;
+    std::string className() { return "TrackedEngine"; }
+
+    int update( bot::Bot& bot );
+
+    vmByte readByte( unsigned int index );
+    void writeByte( unsigned int index, const vmByte& data );
+
+    static vm::IO* createIOPart(Setting& sett );
 
   protected:
-  private:
+    float m_fspeed;
+    float m_rspeed;
+    int m_right_track_speed;
+    int m_left_track_speed;
 };
 
 }

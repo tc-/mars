@@ -28,7 +28,7 @@ void testVM()
 	printTestStart("Constructor()");
 	Memory m(10);
 	m.clear();
-	VM vm( m, 1, 6, 0 ); // sp = 6
+	VM vm( m, 1, 6, NullIO::nullIO() ); // sp = 6
 	printTestResult( (vm.getSP() == 6) && (vm.getCPUSpeed() == 1) && (vm.getPC() == 0) );
 
 	printTestStart("reset(pc,sp)");
@@ -127,7 +127,7 @@ void testInstructionsICONST()
 	printTestName("ICONST instructions");
 
 	Memory m(100);
-	VM vm( m, 1, 6, 0 );
+	VM vm( m, 1, 6, NullIO::nullIO() );
 
 	printTestStart("iconst");
 	success = true;
@@ -185,7 +185,7 @@ void testInstructionsILOAD()
 	printTestName("ILOAD instructions");
 
 	Memory m(100);
-	VM vm( m, 1, 10, 0 );
+	VM vm( m, 1, 10, NullIO::nullIO() );
 
 	printTestStart("iload_b");
 	success = true;
@@ -257,7 +257,7 @@ void testInstructionsSTACK()
 	printTestName("STACK instructions");
 
 	Memory m(100);
-	VM vm( m, 1, 10, 0 );
+	VM vm( m, 1, 10, NullIO::nullIO() );
 
 	printTestStart("pop");
 	success = true;
@@ -312,7 +312,7 @@ void testInstructionsJUMP()
 	printTestName("JUMP instructions");
 
 	Memory m(100);
-	VM vm( m, 1, 10, 0 );
+	VM vm( m, 1, 10, NullIO::nullIO() );
 
 	printTestStart("goto_b");
 	success = true;
@@ -354,7 +354,7 @@ void testInstructionsIOPS()
 	printTestName("IOPS instructions");
 
 	Memory m(100);
-	VM vm( m, 1, 10, 0 );
+	VM vm( m, 1, 10, NullIO::nullIO() );
 
 	printTestStart("iadd");
 	success = true;
@@ -459,7 +459,7 @@ void testInstructionsCMP()
 	printTestName("CMP instructions");
 
 	Memory m(100);
-	VM vm( m, 1, 10, 0 );
+	VM vm( m, 1, 10, NullIO::nullIO() );
 
 	printTestStart("icmp");
 	success = true;
