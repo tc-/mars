@@ -8,6 +8,7 @@ namespace bot
 
 class TrackedEngineIO : public vm::IO
 {
+
   public:
     TrackedEngineIO( const float& forwardSpeed, const float& backwardSpeed );
     ~TrackedEngineIO();
@@ -22,10 +23,12 @@ class TrackedEngineIO : public vm::IO
     static vm::IO* createIOPart(Setting& sett );
 
   protected:
+
     float m_fspeed;
     float m_rspeed;
     int m_right_track_speed;
     int m_left_track_speed;
+
 };
 
 }
