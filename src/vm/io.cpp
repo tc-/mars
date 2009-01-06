@@ -4,13 +4,13 @@ namespace vm
 {
 
 
-IO* IOFactory::createIO( Setting& sett )
+IO* IOFactory::createIO( Setting& sett, char* botMemory, unsigned int maxLength )
 {
   std::string type;
   if ( (sett.lookupValue( "type", type )) && (type != "") ) {
     FactoryMap::iterator i = m_factorymap.find(type);
     if ( i->second != 0 ) {
-      return (i->second)(sett);
+      return (i->second)(sett, botMemory, maxLength);
     }
   }
   return 0;

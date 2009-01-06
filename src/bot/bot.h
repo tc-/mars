@@ -22,6 +22,8 @@ class Bot
 
     void update();
 
+		static vm::IOFactory s_iof;
+
 	private:
 
     void loadBotSpec( BotSpec& spec );
@@ -30,7 +32,6 @@ class Bot
 		BotId m_id;
 		Position m_pos;
 
-		static vm::IOFactory s_iof;
 		static void setupIOFactory();
 
 };

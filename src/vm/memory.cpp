@@ -47,6 +47,17 @@ void Memory::clear()
 }
 
 
+void Memory::clearArea(unsigned int start, unsigned int stop )
+{
+  if ( start > stop ) {
+    unsigned int temp = start;
+    start = stop;
+    stop = temp;
+  }
+  for ( unsigned int i = start; i < stop; i++ ) data[i] = 0;
+}
+
+
 void Memory::resize( unsigned int size )
 {
 	unsigned char* tmp = data;

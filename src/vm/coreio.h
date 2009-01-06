@@ -4,7 +4,7 @@
 #include "vm/io.h"
 #include "vm/vm.h"
 #include "vm/memory.h"
-#include <vector>
+#include "util/intervalvector.h"
 
 
 namespace bot { class Bot; }
@@ -12,7 +12,6 @@ namespace bot { class Bot; }
 namespace vm
 {
 
-typedef std::vector<IO*> IOVector;
 
 class CoreIO : public IO
 {
@@ -28,16 +27,21 @@ class CoreIO : public IO
     vmByte readByte( unsigned int index );
 		void writeByte( unsigned int index, const vmByte& data );
 
+    unsigned int size() { return memory().size(); }
+
     VM& vm();
     void setVM( VM* newVM );
 
+    Memory& memory();
+
     void clearIOList();
-    void addIO( IO& io );
+    void addIO( Setting& s );
 
   protected:
 
     VM* m_vm;
-    IOVector m_ios;
+    unsigned int lastIOPos;
+    util::IntervalVector<IO> m_ios;
 
 };
 

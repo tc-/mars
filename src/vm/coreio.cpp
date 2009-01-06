@@ -1,16 +1,17 @@
 #include "coreio.h"
-#include <assert.h>
+#include "bot/bot.h"
+#include "util/debug.h"
 
-
-#define IO_BLOCK_SIZE 1024
 #define DEFAULT_MEM_SIZE 1024
 #define DEFAULT_CPU_SPEED 16
+
+#define CoreIODataSize 16
 
 namespace vm
 {
 
 
-CoreIO::CoreIO(): m_vm(0)
+CoreIO::CoreIO(): m_vm(0), lastIOPos(CoreIODataSize), m_ios(8)
 {
 }
 
@@ -24,7 +25,7 @@ IO* CoreIO::createCoreIOPart(Setting& sett )
   unsigned int memorySize = DEFAULT_MEM_SIZE;
   unsigned int cpuSpeed = DEFAULT_CPU_SPEED;
 
-  sett.lookupValue("memorysize", memorySize);
+  sett.lookupValue("memory", memorySize);
   sett.lookupValue("cpuspeed", cpuSpeed);
 
   Memory* memory = new Memory(memorySize);
@@ -39,19 +40,21 @@ IO* CoreIO::createCoreIOPart(Setting& sett )
 int CoreIO::update( bot::Bot& bot )
 {
   unsigned int t = 0;
-  assert(m_vm != 0);
+  assert(m_vm != 0, "CoreIO::update( bot::Bot& bot ): m_vm is null.");
   m_vm->update();
-  for ( int unsigned i = 0; i < m_ios.size(); i++ ) {
-    t += m_ios[i]->update( bot );
+  for ( int unsigned i = 0; i < m_ios.count(); i++ ) {
+    IO* io = m_ios.get(i);
+    if ( io == 0 ) continue;
+    t += io->update( bot );
   }
-  //m_vm-> // Update vm time left with t
+  //TODO: m_vm-> // Update vm time left with t
   return 0;
 }
 
 
 VM& CoreIO::vm()
 {
-  assert(m_vm != 0);
+  assert(m_vm != 0, "CoreIO::vm(): m_vm is null.");
   return *m_vm;
 }
 
@@ -59,17 +62,24 @@ VM& CoreIO::vm()
 void CoreIO::setVM( VM* newVM )
 {
   m_vm = newVM;
+  if ( m_vm != 0 ) m_vm->reset(0,0);
+}
+
+
+Memory& CoreIO::memory()
+{
+  assert(m_vm != 0, "CoreIO::memory(): m_vm is null.");
+  return m_vm->memory();
 }
 
 
 vmByte CoreIO::readByte( unsigned int index )
 {
-  unsigned int ioindex = index / IO_BLOCK_SIZE;
-  if ( ioindex == 0 ) {
+  if ( index < CoreIODataSize ) {
 
+  } else if ( index < lastIOPos ) {
   } else {
-    ioindex--;
-    if ( ioindex < m_ios.size() ) return m_ios[ioindex]->readByte( index - ioindex * IO_BLOCK_SIZE );
+    return m_vm->memory().data[index];
   }
   return 0;
 }
@@ -77,24 +87,22 @@ vmByte CoreIO::readByte( unsigned int index )
 
 void CoreIO::writeByte( unsigned int index, const vmByte& data )
 {
-  unsigned int ioindex = index / IO_BLOCK_SIZE;
-  if ( ioindex == 0 ) {
 
-  } else {
-    ioindex--;
-    if ( ioindex < m_ios.size() ) m_ios[ioindex]->writeByte( index - ioindex * IO_BLOCK_SIZE, data );
-  }
 }
 
 void CoreIO::clearIOList()
 {
-  m_ios.clear();
+  m_ios.clear(); // TODO: Fix memleak here.
 }
 
 
-void CoreIO::addIO( IO& io )
+void CoreIO::addIO( Setting& s )
 {
-  m_ios.push_back( &io );
+  vm::IO* io = bot::Bot::s_iof.createIO(s, (char*)&m_vm->memory().data[lastIOPos], m_vm->memory().size() - lastIOPos );
+  if ( io != 0 ) {
+    m_ios.add( io, io->size() );
+    //lastIOPos += ; TODO
+  }
 }
 
 

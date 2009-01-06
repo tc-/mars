@@ -8,6 +8,7 @@ namespace vm
 {
 
 class VM;
+class CoreIO;
 
 typedef void (VM::*interpretFunc)();
 
@@ -24,7 +25,7 @@ class VM
 	public:
 
 
-		VM( Memory& memory, unsigned int cpu_speed, unsigned int sp, IO& io );
+		VM( Memory& memory, unsigned int cpu_speed, unsigned int sp, CoreIO& coreio );
 		virtual ~VM();
 
 		void update();
@@ -33,10 +34,10 @@ class VM
 		inline unsigned int getCPUSpeed() { return m_speed; }
 
 		inline unsigned int getPC() { return m_pc; }
-		inline void setPC( unsigned int pc ) { m_pc = pc % m_memory.size(); }
+		inline void setPC( unsigned int pc ) { m_pc = pc<m_memory.size()?pc:0; }
 
 		inline unsigned int getSP() { return m_sp; }
-		inline void setSP( unsigned int sp ) { m_sp = sp % m_memory.size(); }
+		inline void setSP( unsigned int sp ) { m_sp = sp<m_memory.size()?sp:0; }
 
 		void reset( unsigned int pc, unsigned int sp );
 
@@ -49,9 +50,13 @@ class VM
 		void load( std::istream& data );
 		void save( std::ostream& data );
 
+		IO& getIO( unsigned int address );
+
+		Memory& memory() { return m_memory; }
+
 	protected:
 
-    IO& m_io;
+    CoreIO& m_coreio;
 		Memory& m_memory;
 		unsigned int m_speed;
 		unsigned int m_pc;

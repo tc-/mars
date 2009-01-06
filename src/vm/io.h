@@ -15,7 +15,7 @@ namespace vm
 
 class IO;
 
-typedef IO* (*iofactoryfunc)(Setting&);
+typedef IO* (*iofactoryfunc)(Setting&, char*, unsigned int);
 typedef std::map<std::string,iofactoryfunc> FactoryMap;
 
 class IO
@@ -27,6 +27,7 @@ class IO
     virtual int update( bot::Bot& bot ) = 0;
 
     virtual bool isPublic() { return false; }
+    virtual unsigned int size() = 0;
 
 		virtual vmByte readByte( unsigned int index ) = 0;
 		virtual vmInt readInt( unsigned int index );
@@ -56,18 +57,21 @@ class NullIO: public IO
 
     int update( bot::Bot& bot ) { return 0; }
 
+    unsigned int size() { return 0; }
+
     vmByte readByte( unsigned int index ) { return 0; }
     void writeByte( unsigned int index, const vmByte& data ) {}
 
     static NullIO& nullIO();
-    static IO* createIOPart(Setting& sett ) { return new NullIO; }
+    static IO* createIOPart(Setting& sett, char* botMemory, unsigned int maxLength ) { return new NullIO; }
+    static unsigned int IOSize(Setting& sett ) { return 0; }
 };
 
 
 class IOFactory
 {
   public:
-    IO* createIO( Setting& sett );
+    IO* createIO( Setting& sett, char* botMemory, unsigned int maxLength );
     void addIOClass( const std::string& className, iofactoryfunc factory );
     void clearIOClasses();
   private:

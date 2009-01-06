@@ -2,6 +2,7 @@
 #include <fstream>
 
 #include "vm/vm.h"
+#include "vm/coreio.h"
 #include "vm/memory.h"
 #include "testlib.h"
 
@@ -28,7 +29,8 @@ void testVM()
 	printTestStart("Constructor()");
 	Memory m(10);
 	m.clear();
-	VM vm( m, 1, 6, NullIO::nullIO() ); // sp = 6
+	CoreIO core;
+	VM vm( m, 1, 6, core); // sp = 6
 	printTestResult( (vm.getSP() == 6) && (vm.getCPUSpeed() == 1) && (vm.getPC() == 0) );
 
 	printTestStart("reset(pc,sp)");
@@ -127,7 +129,8 @@ void testInstructionsICONST()
 	printTestName("ICONST instructions");
 
 	Memory m(100);
-	VM vm( m, 1, 6, NullIO::nullIO() );
+	CoreIO core;
+	VM vm( m, 1, 6, core );
 
 	printTestStart("iconst");
 	success = true;
@@ -185,7 +188,8 @@ void testInstructionsILOAD()
 	printTestName("ILOAD instructions");
 
 	Memory m(100);
-	VM vm( m, 1, 10, NullIO::nullIO() );
+	CoreIO core;
+	VM vm( m, 1, 10, core );
 
 	printTestStart("iload_b");
 	success = true;
@@ -257,7 +261,8 @@ void testInstructionsSTACK()
 	printTestName("STACK instructions");
 
 	Memory m(100);
-	VM vm( m, 1, 10, NullIO::nullIO() );
+	CoreIO core;
+	VM vm( m, 1, 10, core );
 
 	printTestStart("pop");
 	success = true;
@@ -312,7 +317,8 @@ void testInstructionsJUMP()
 	printTestName("JUMP instructions");
 
 	Memory m(100);
-	VM vm( m, 1, 10, NullIO::nullIO() );
+  CoreIO core;
+	VM vm( m, 1, 10, core );
 
 	printTestStart("goto_b");
 	success = true;
@@ -354,7 +360,8 @@ void testInstructionsIOPS()
 	printTestName("IOPS instructions");
 
 	Memory m(100);
-	VM vm( m, 1, 10, NullIO::nullIO() );
+	CoreIO core;
+	VM vm( m, 1, 10, core );
 
 	printTestStart("iadd");
 	success = true;
@@ -459,7 +466,8 @@ void testInstructionsCMP()
 	printTestName("CMP instructions");
 
 	Memory m(100);
-	VM vm( m, 1, 10, NullIO::nullIO() );
+	CoreIO core;
+	VM vm( m, 1, 10, core );
 
 	printTestStart("icmp");
 	success = true;

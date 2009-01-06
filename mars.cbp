@@ -22,7 +22,6 @@
 			</Target>
 			<Target title="Client-Debug">
 				<Option output="mars-client-debug" prefix_auto="1" extension_auto="1" />
-				<Option working_dir="" />
 				<Option object_output="obj/Client-Debug/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
@@ -33,7 +32,6 @@
 			</Target>
 			<Target title="Client-Release">
 				<Option output="mars-client" prefix_auto="1" extension_auto="1" />
-				<Option working_dir="" />
 				<Option object_output="obj/Client-Release/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
@@ -47,7 +45,6 @@
 			</Target>
 			<Target title="Server-Debug">
 				<Option output="mars-server-debug" prefix_auto="1" extension_auto="1" />
-				<Option working_dir="" />
 				<Option object_output="obj/Server-Debug/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
@@ -61,7 +58,6 @@
 			</Target>
 			<Target title="Server-Release">
 				<Option output="mars-server" prefix_auto="1" extension_auto="1" />
-				<Option working_dir="" />
 				<Option object_output="obj/Server-Release/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
@@ -143,6 +139,8 @@
 		<Unit filename="src/test/testvm.cpp">
 			<Option target="Test" />
 		</Unit>
+		<Unit filename="src/util/intervalvector.cpp" />
+		<Unit filename="src/util/intervalvector.h" />
 		<Unit filename="src/util/position.h" />
 		<Unit filename="src/vm/coreio.cpp" />
 		<Unit filename="src/vm/coreio.h" />

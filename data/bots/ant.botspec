@@ -7,7 +7,7 @@ botspec:
 	weight = 100;
 	armour = "none";
 	health = 20;
-	memorysize = 1024;
+	memory = 1024;
 	cpuspeed = 10;
 
 	parts = (
@@ -16,6 +16,7 @@ botspec:
 			alias = "Engine";
 			maxForwardSpeed = 8.0;
 			maxReverseSpeed = 2.0;
+			acceleration = 0.2;
 		},
 		{
 			type = "ProximitySensor";

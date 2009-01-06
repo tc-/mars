@@ -28,6 +28,7 @@ class Memory: public IO
 		void writeByte( unsigned int index, const vmByte& data ) throw ( std::invalid_argument );
 
 		void clear();
+		void clearArea(unsigned int start, unsigned int stop );
 		void resize( unsigned int size );
 
 		inline unsigned int size() { return m_size; }

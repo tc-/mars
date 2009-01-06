@@ -24,8 +24,7 @@ void Bot::loadBotSpec( BotSpec& spec )
 
   for ( int i = 0; i < spec.parts().getLength(); i++ ) {
     Setting& s = spec.parts()[i];
-    vm::IO* io = s_iof.createIO(s);
-    if ( io != 0 ) m_core->addIO(*io);
+    m_core->addIO(s);
   }
 }
 
