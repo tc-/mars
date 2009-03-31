@@ -29,7 +29,7 @@ void IOFactory::clearIOClasses()
 }
 
 
-vmInt IO::readInt( unsigned int index )
+vmInt IO::readInt( const unsigned int& index )
 {
 	vmByte data[sizeof(vmInt)];
 	for ( unsigned int i = 0; i < sizeof(vmInt); i++ ) data[i] = readByte(index+i);
@@ -38,7 +38,7 @@ vmInt IO::readInt( unsigned int index )
 }
 
 
-vmUInt IO::readUInt( unsigned int index )
+vmUInt IO::readUInt( const unsigned int& index )
 {
 	vmByte data[sizeof(vmUInt)];
 	for ( unsigned int i = 0; i < sizeof(vmUInt); i++ ) data[i] = readByte(index+i);
@@ -47,7 +47,7 @@ vmUInt IO::readUInt( unsigned int index )
 }
 
 
-vmFloat IO::readFloat( unsigned int index )
+vmFloat IO::readFloat( const unsigned int& index )
 {
 	char data[sizeof(vmFloat)];
 	for ( unsigned int i = 0; i < sizeof(vmFloat); i++ ) data[i] = readByte(index+i);
@@ -56,7 +56,7 @@ vmFloat IO::readFloat( unsigned int index )
 }
 
 
-vmBool IO::readBool( unsigned int index )
+vmBool IO::readBool( const unsigned int& index )
 {
 	vmByte by = readByte(index);
 	vmBool* b = reinterpret_cast<vmBool*>(&by);
@@ -64,7 +64,7 @@ vmBool IO::readBool( unsigned int index )
 }
 
 
-vmSByte IO::readSByte( unsigned int index )
+vmSByte IO::readSByte( const unsigned int& index )
 {
 	vmByte by = readByte(index);
 	vmSByte* b = reinterpret_cast<vmSByte*>(&by);
@@ -72,33 +72,33 @@ vmSByte IO::readSByte( unsigned int index )
 }
 
 
-void IO::writeInt( unsigned int index, const vmInt& data )
+void IO::writeInt( const unsigned int& index, const vmInt& data )
 {
 	const vmUInt* c = reinterpret_cast<const vmUInt*>(&data);
 	writeUInt(index, *c );
 }
 
 
-void IO::writeUInt( unsigned int index, const vmUInt& data )
+void IO::writeUInt( const unsigned int& index, const vmUInt& data )
 {
 	const vmByte* c = reinterpret_cast<const vmByte*>(&data);
 	for ( unsigned int i = 0; i < sizeof(data); i++ ) writeByte(index+i, c[i] );
 }
 
 
-void IO::writeFloat( unsigned int index, const vmFloat& data )
+void IO::writeFloat( const unsigned int& index, const vmFloat& data )
 {
 	const vmUInt* c = reinterpret_cast<const vmUInt*>(&data);
 	writeUInt(index, *c );
 }
 
-void IO::writeBool( unsigned int index, const vmBool& data )
+void IO::writeBool( const unsigned int& index, const vmBool& data )
 {
 	const vmByte* c = reinterpret_cast<const vmByte*>(&data);
 	writeByte(index, *c );
 }
 
-void IO::writeSByte( unsigned int index, const vmSByte& data )
+void IO::writeSByte( const unsigned int& index, const vmSByte& data )
 {
 	const vmByte* c = reinterpret_cast<const vmByte*>(&data);
 	writeByte(index, *c );

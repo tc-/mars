@@ -8,7 +8,7 @@
 #include "bot/botspec.h"
 #include "vm/io.h"
 
-typedef unsigned int BotId;
+typedef unsigned int BotID;
 
 namespace bot
 {
@@ -18,7 +18,7 @@ class Bot
 
 	public:
 
-		Bot( BotId id, Position& pos, BotSpec& spec ):m_id(id),m_pos(pos){ loadBotSpec(spec); }
+		Bot( Position& pos, BotSpec& spec ):m_pos(pos){ m_id = getBotID(); loadBotSpec(spec); }
 
     void update();
 
@@ -29,10 +29,12 @@ class Bot
     void loadBotSpec( BotSpec& spec );
 
 		vm::CoreIO* m_core;
-		BotId m_id;
+		BotID m_id;
 		Position m_pos;
 
 		static void setupIOFactory();
+		static BotID s_lastBotID;
+		static BotID getBotID() { return ++s_lastBotID; }
 
 };
 

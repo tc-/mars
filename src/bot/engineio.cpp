@@ -1,6 +1,6 @@
 
 #include "engineio.h"
-#include <assert.h>
+#include "util/debug.h"
 
 #define IOFloat(pos) (*((float*)&m_data[pos]))
 
@@ -8,30 +8,30 @@
 namespace bot
 {
 
-TrackedEngineIO::TrackedEngineIO( const float& forwardSpeed, const float& backwardSpeed )
+TrackedEngineIO::TrackedEngineIO( const float& acceleration, const float& breakSpeed )
 {
   m_own_data = true;
   m_data = new char[TrackedEngineIODataSize];
-  init( forwardSpeed, backwardSpeed );
+  init( acceleration, breakSpeed );
 }
 
 
-TrackedEngineIO::TrackedEngineIO( char* data, const float& forwardSpeed, const float& backwardSpeed )
+TrackedEngineIO::TrackedEngineIO( char* data, const float& acceleration, const float& breakSpeed )
 {
   m_own_data = false;
   m_data = data;
-  init( forwardSpeed, backwardSpeed );
+  init( acceleration, breakSpeed );
 }
 
 
-void TrackedEngineIO::init( const float& forwardSpeed, const float& backwardSpeed )
+void TrackedEngineIO::init( const float& acceleration, const float& breakSpeed )
 {
-  IOFloat(TrackedEngineSpeedRight) = 0.0;
-  IOFloat(TrackedEngineSpeedLeft) = 0.0;
+  IOFloat(TrackedEngineAccelerationRight) = 0.0;
+  IOFloat(TrackedEngineAccelerationLeft) = 0.0;
   IOFloat(TrackedEngineCurrentSpeedRight) = 0.0;
   IOFloat(TrackedEngineCurrentSpeedLeft) = 0.0;
-  IOFloat(TrackedEngineMaxForwardSpeed) = forwardSpeed;
-  IOFloat(TrackedEngineMaxReverseSpeed) = backwardSpeed;
+  IOFloat(TrackedEngineMaxAcceleration) = acceleration;
+  IOFloat(TrackedEngineMaxBreakSpeed) = breakSpeed;
 }
 
 
@@ -46,9 +46,11 @@ vm::IO* TrackedEngineIO::createIOPart( Setting& sett, char* botMemory, unsigned 
   if ( maxLength < TrackedEngineIODataSize ) return 0;
   float f = 8.0;
   float r = 2.0;
+  float b = 16.0;
 
   sett.lookupValue("maxForwardSpeed", f);
   sett.lookupValue("maxReverseSpeed", r);
+  sett.lookupValue("breakSpeed", b);
 
   return new TrackedEngineIO( botMemory, f, r );
 }
@@ -56,19 +58,32 @@ vm::IO* TrackedEngineIO::createIOPart( Setting& sett, char* botMemory, unsigned 
 
 int TrackedEngineIO::update( bot::Bot& bot )
 {
+  if ( IOFloat(TrackedEngineAccelerationRight) > IOFloat(TrackedEngineMaxAcceleration) ) {
+    IOFloat(TrackedEngineAccelerationRight) = IOFloat(TrackedEngineMaxAcceleration);
+  } else if ( IOFloat(TrackedEngineAccelerationRight) < -IOFloat(TrackedEngineMaxBreakSpeed) ) {
+    IOFloat(TrackedEngineAccelerationRight) = -IOFloat(TrackedEngineMaxBreakSpeed);
+  }
+  if ( IOFloat(TrackedEngineAccelerationLeft) > IOFloat(TrackedEngineMaxAcceleration) ) {
+    IOFloat(TrackedEngineAccelerationLeft) = IOFloat(TrackedEngineMaxAcceleration);
+  } else if ( IOFloat(TrackedEngineAccelerationLeft) < -IOFloat(TrackedEngineMaxBreakSpeed) ) {
+    IOFloat(TrackedEngineAccelerationLeft) = -IOFloat(TrackedEngineMaxBreakSpeed);
+  }
+
+  IOFloat(TrackedEngineCurrentSpeedRight) += IOFloat(TrackedEngineAccelerationRight) - IOFloat(TrackedEngineCurrentSpeedRight) * 0.1;
+  IOFloat(TrackedEngineCurrentSpeedLeft) += IOFloat(TrackedEngineAccelerationLeft) - IOFloat(TrackedEngineCurrentSpeedLeft) * 0.1;
 
   return 0;
 }
 
 
-vmByte TrackedEngineIO::readByte( unsigned int index )
+vmByte TrackedEngineIO::readByte( const unsigned int& index )
 {
-  assert( index < TrackedEngineIODataSize );
+  assert( index < TrackedEngineIODataSize, "TrackedEngineIO::readByte( unsigned int index ): read out of bounds." );
   return m_data[index];
 }
 
 
-void TrackedEngineIO::writeByte( unsigned int index, const vmByte& data )
+void TrackedEngineIO::writeByte( const unsigned int& index, const vmByte& data )
 {
   if ( index >= TrackedEngineIORWDataSize ) return;
   m_data[index] =  data;

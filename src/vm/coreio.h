@@ -2,7 +2,6 @@
 #define COREIO_H
 
 #include "vm/io.h"
-#include "vm/vm.h"
 #include "vm/memory.h"
 #include "util/intervalvector.h"
 
@@ -12,20 +11,21 @@ namespace bot { class Bot; }
 namespace vm
 {
 
+class VM;
 
 class CoreIO : public IO
 {
   public:
     CoreIO();
     ~CoreIO();
-    static IO* createCoreIOPart(Setting& sett );
+    static IO* createCoreIOPart( Setting& sett );
 
     std::string className() { return "Core"; }
 
     int update( bot::Bot& bot );
 
-    vmByte readByte( unsigned int index );
-		void writeByte( unsigned int index, const vmByte& data );
+    vmByte readByte( const unsigned int& index );
+    void writeByte( const unsigned int& index, const vmByte& data );
 
     unsigned int size() { return memory().size(); }
 

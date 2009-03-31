@@ -1,6 +1,7 @@
 #include "coreio.h"
 #include "bot/bot.h"
 #include "util/debug.h"
+#include "vm/vm.h"
 
 #define DEFAULT_MEM_SIZE 1024
 #define DEFAULT_CPU_SPEED 16
@@ -11,16 +12,17 @@ namespace vm
 {
 
 
-CoreIO::CoreIO(): m_vm(0), lastIOPos(CoreIODataSize), m_ios(8)
+CoreIO::CoreIO(): m_vm(0), lastIOPos(CoreIODataSize), m_ios(16)
 {
 }
 
 CoreIO::~CoreIO()
 {
+  clearIOList();
 }
 
 
-IO* CoreIO::createCoreIOPart(Setting& sett )
+IO* CoreIO::createCoreIOPart( Setting& sett )
 {
   unsigned int memorySize = DEFAULT_MEM_SIZE;
   unsigned int cpuSpeed = DEFAULT_CPU_SPEED;
@@ -32,6 +34,8 @@ IO* CoreIO::createCoreIOPart(Setting& sett )
   CoreIO* ret = new CoreIO();
   VM* vm =  new VM(*memory, cpuSpeed, 0, *ret);
   ret->setVM( vm );
+
+  ret->m_ios.add(ret, CoreIODataSize);
 
   return ret;
 }
@@ -47,8 +51,8 @@ int CoreIO::update( bot::Bot& bot )
     if ( io == 0 ) continue;
     t += io->update( bot );
   }
-  //TODO: m_vm-> // Update vm time left with t
-  return 0;
+  m_vm->setTimeLeftD(-t);
+  return t;
 }
 
 
@@ -73,25 +77,31 @@ Memory& CoreIO::memory()
 }
 
 
-vmByte CoreIO::readByte( unsigned int index )
+vmByte CoreIO::readByte( const unsigned int& index )
 {
   if ( index < CoreIODataSize ) {
 
   } else if ( index < lastIOPos ) {
+    unsigned int base;
+    IO* io = m_ios.find(index, &base);
+    if ( io != 0 ) return io->readByte(index - base);
   } else {
-    return m_vm->memory().data[index];
+    if ( m_vm->memory().size() > index ) {
+      return m_vm->memory().data[index];
+    }
   }
   return 0;
 }
 
 
-void CoreIO::writeByte( unsigned int index, const vmByte& data )
+void CoreIO::writeByte( const unsigned int& index, const vmByte& data )
 {
 
 }
 
 void CoreIO::clearIOList()
 {
+  assert(false, "CoreIO::clearIOList(): Plox fix memleak here.");
   m_ios.clear(); // TODO: Fix memleak here.
 }
 

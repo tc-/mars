@@ -2,7 +2,7 @@
 #include "bot.h"
 #include "vm/coreio.h"
 #include "bot/engineio.h"
-#include <assert.h>
+#include "util/debug.h"
 
 namespace bot
 {
@@ -19,7 +19,7 @@ void Bot::update()
 
 void Bot::loadBotSpec( BotSpec& spec )
 {
-  assert( spec.isOk() );
+  assert( spec.isOk(), "Bot::loadBotSpec( BotSpec& spec ): Spec not Ok." );
   m_core = (vm::CoreIO*)vm::CoreIO::createCoreIOPart( spec.root() );
 
   for ( int i = 0; i < spec.parts().getLength(); i++ ) {

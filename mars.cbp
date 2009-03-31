@@ -139,6 +139,7 @@
 		<Unit filename="src/test/testvm.cpp">
 			<Option target="Test" />
 		</Unit>
+		<Unit filename="src/util/debug.h" />
 		<Unit filename="src/util/intervalvector.cpp" />
 		<Unit filename="src/util/intervalvector.h" />
 		<Unit filename="src/util/position.h" />

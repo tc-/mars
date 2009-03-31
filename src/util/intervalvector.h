@@ -2,6 +2,7 @@
 #define INTERVALVECTOR_H
 
 #include <vector>
+#include "debug.h"
 
 
 namespace util
@@ -41,9 +42,11 @@ class IntervalVector
       return pos;
     }
 
-    T* find( unsigned int address ) {
+    T* find( unsigned int address, unsigned int* outBaseAddress ) {
+      assert(outBaseAddress != 0, "find( unsigned int address, unsigned int* outBaseAddress ): outBaseAddress is null.");
       unsigned int pos = address;
 
+      *outBaseAddress = 0;
       if ( m_items.size() == 0 ) return 0;
       if ( pos >= m_size ) return 0;
       pos = pos/m_blocks;
@@ -53,16 +56,23 @@ class IntervalVector
 
       IntervalVectorItem<T> itm = m_items[pos];
       if ( (itm.start >= address) && (itm.start+itm.size < address) ) {
+        *outBaseAddress = itm.start;
         return itm.obj;
       } else if ( itm.start > address ) {
         for ( int i = pos - 1; i >= 0; i-- ) {
           IntervalVectorItem<T> it = m_items[i];
-          if ( (it.start >= address) && (it.start+it.size < address) ) return it.obj;
+          if ( (it.start >= address) && (it.start+it.size < address) ) {
+            *outBaseAddress = it.start;
+            return it.obj;
+          }
         }
       } else {
         for ( unsigned int i = pos+1; i < m_items.size(); i++ ) {
           IntervalVectorItem<T> it = m_items[i];
-          if ( (it.start >= address) && (it.start+it.size < address) ) return it.obj;
+          if ( (it.start >= address) && (it.start+it.size < address) ) {
+            *outBaseAddress = it.start;
+            return it.obj;
+          }
         }
       }
       return 0;

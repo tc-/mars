@@ -507,3 +507,28 @@ void testInstructionsCMP()
 	printTestResult();
 }
 
+
+void testInstructionsPORT()
+{
+	/*bool success;
+	printTestName("PORT instructions");
+
+	Memory m(100);
+	CoreIO core;
+	VM vm( m, 1, 10, core );
+  core.setVM(&vm);
+
+	printTestStart("port_r");
+	success = true;
+	m.clear();
+	vm.reset(0,6);
+	vm.setSP(10);
+	m.writeByte(0,62);
+	m.writeInt(6,100);
+	vm.update();
+	if ( !vmState(vm,1,7) || !readSByte(m,6,1) ) success = false;
+	printTestResult( success );
+
+	printTestResult();*/
+}
+

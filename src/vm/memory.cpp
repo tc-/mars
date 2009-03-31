@@ -27,14 +27,14 @@ int Memory::update( bot::Bot& bot )
 }
 
 
-vmByte Memory::readByte( unsigned int index ) throw ( std::invalid_argument )
+vmByte Memory::readByte( const unsigned int& index ) throw ( std::invalid_argument )
 {
 	if ( index >= m_size ) throw std::invalid_argument("index >= size");
 	return data[index];
 }
 
 
-void Memory::writeByte( unsigned int index, const vmByte& indata ) throw ( std::invalid_argument )
+void Memory::writeByte( const unsigned int& index, const vmByte& indata ) throw ( std::invalid_argument )
 {
 	if ( index >= m_size ) throw std::invalid_argument("index >= size");
 	data[index] = indata;

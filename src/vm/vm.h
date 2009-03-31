@@ -7,10 +7,6 @@
 namespace vm
 {
 
-class VM;
-class CoreIO;
-
-typedef void (VM::*interpretFunc)();
 
 enum Interrupts
 {
@@ -19,6 +15,9 @@ enum Interrupts
 };
 
 #define numInterruptVectors 2
+
+
+class CoreIO;
 
 class VM
 {
@@ -29,6 +28,8 @@ class VM
 		virtual ~VM();
 
 		void update();
+
+		inline void setTimeLeftD( int delta ) { m_time_left += delta; }
 
 		inline void setCPUSpeed( unsigned int new_speed ) { m_speed = new_speed; }
 		inline unsigned int getCPUSpeed() { return m_speed; }
@@ -62,7 +63,7 @@ class VM
 		unsigned int m_pc;
 		unsigned int m_sp;
 		unsigned int m_bos;
-		unsigned int m_time_left;
+		int m_time_left;
 		vmUInt m_ints[numInterruptVectors];
 };
 

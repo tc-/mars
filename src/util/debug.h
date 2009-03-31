@@ -2,27 +2,38 @@
 #define DEBUG_H
 
 #include <string>
-#include <stdio.h>
+#include <iostream>
 #include <stdexcept>
+
+
+#ifdef DEBUG
+
 #define assert(cond,msg) doAssert(cond,msg)
 
+#else
 
-void debugMessage( const char* msg )
+#define assert(cond,msg)
+
+#endif
+
+
+inline void debugMessage( const char* msg )
 {
-  std::cout << "ddd " << msg << std::endl;
+  std::cout << "--- " << msg << std::endl;
 }
 
 
-void debugMessage( const std::string& msg )
+inline void debugMessage( const std::string& msg )
 {
-  std::cout << "ddd " << msg << std::endl;
+  std::cout << "--- " << msg << std::endl;
 }
 
 
 inline void doAssert( const bool& cond, const char* msg )
 {
   if ( !cond ) {
-    debugMessage(msg);
+    std::cout << "### " << msg << std::endl;
+    throw std::runtime_error(msg);
   }
 }
 
@@ -30,7 +41,7 @@ inline void doAssert( const bool& cond, const char* msg )
 inline void doAssert( const bool& cond, const std::string& msg )
 {
   if ( !cond ) {
-    debugMessage(msg);
+    std::cout << "### " << msg << std::endl;
     throw std::runtime_error(msg);
   }
 }

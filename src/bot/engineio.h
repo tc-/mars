@@ -6,12 +6,12 @@
 #define TrackedEngineIODataSize 24
 #define TrackedEngineIORWDataSize 8
 
-#define TrackedEngineSpeedRight 0
-#define TrackedEngineSpeedLeft 4
+#define TrackedEngineAccelerationRight 0
+#define TrackedEngineAccelerationLeft 4
 #define TrackedEngineCurrentSpeedRight 8
 #define TrackedEngineCurrentSpeedLeft 12
-#define TrackedEngineMaxForwardSpeed 16
-#define TrackedEngineMaxReverseSpeed 20
+#define TrackedEngineMaxAcceleration 16
+#define TrackedEngineMaxBreakSpeed 20
 
 
 namespace bot
@@ -21,16 +21,16 @@ class TrackedEngineIO: public vm::IO
 {
 
   public:
-    TrackedEngineIO( const float& forwardSpeed, const float& backwardSpeed );
-    TrackedEngineIO( char* data, const float& forwardSpeed, const float& backwardSpeed );
+    TrackedEngineIO( const float& acceleration, const float& breakSpeed );
+    TrackedEngineIO( char* data, const float& acceleration, const float& breakSpeed );
     ~TrackedEngineIO();
 
     std::string className() { return "TrackedEngine"; }
 
     int update( bot::Bot& bot );
 
-    vmByte readByte( unsigned int index );
-    void writeByte( unsigned int index, const vmByte& data );
+    vmByte readByte( const unsigned int& index );
+    void writeByte( const unsigned int& index, const vmByte& data );
 
     unsigned int size() { return TrackedEngineIODataSize; }
 
@@ -41,7 +41,7 @@ class TrackedEngineIO: public vm::IO
     char* m_data;
     bool m_own_data;
 
-    void init( const float& forwardSpeed, const float& backwardSpeed );
+    void init( const float& acceleration, const float& breakSpeed );
 
 };
 

@@ -29,19 +29,19 @@ class IO
     virtual bool isPublic() { return false; }
     virtual unsigned int size() = 0;
 
-		virtual vmByte readByte( unsigned int index ) = 0;
-		virtual vmInt readInt( unsigned int index );
-		virtual vmUInt readUInt( unsigned int index );
-		virtual vmFloat readFloat( unsigned int index );
-		virtual vmBool readBool( unsigned int index );
-		virtual vmSByte readSByte( unsigned int index );
+		virtual vmByte readByte( const unsigned int& index ) = 0;
+		virtual vmInt readInt( const unsigned int& index );
+		virtual vmUInt readUInt( const unsigned int& index );
+		virtual vmFloat readFloat( const unsigned int& index );
+		virtual vmBool readBool( const unsigned int& index );
+		virtual vmSByte readSByte( const unsigned int& index );
 
-		virtual void writeByte( unsigned int index, const vmByte& data ) = 0;
-		virtual void writeInt( unsigned int index, const vmInt& data );
-		virtual void writeUInt( unsigned int index, const vmUInt& data );
-		virtual void writeFloat( unsigned int index, const vmFloat& data );
-		virtual void writeBool( unsigned int index, const vmBool& data );
-		virtual void writeSByte( unsigned int index, const vmSByte& data );
+		virtual void writeByte( const unsigned int& index, const vmByte& data ) = 0;
+		virtual void writeInt( const unsigned int& index, const vmInt& data );
+		virtual void writeUInt( const unsigned int& index, const vmUInt& data );
+		virtual void writeFloat( const unsigned int& index, const vmFloat& data );
+		virtual void writeBool( const unsigned int& index, const vmBool& data );
+		virtual void writeSByte( const unsigned int& index, const vmSByte& data );
 
   private:
 
@@ -59,8 +59,8 @@ class NullIO: public IO
 
     unsigned int size() { return 0; }
 
-    vmByte readByte( unsigned int index ) { return 0; }
-    void writeByte( unsigned int index, const vmByte& data ) {}
+    vmByte readByte( const unsigned int& index ) { return 0; }
+    void writeByte( const unsigned int& index, const vmByte& data ) {}
 
     static NullIO& nullIO();
     static IO* createIOPart(Setting& sett, char* botMemory, unsigned int maxLength ) { return new NullIO; }

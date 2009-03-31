@@ -24,8 +24,8 @@ class Memory: public IO
 
     int update( bot::Bot& bot );
 
-		vmByte readByte( unsigned int index ) throw ( std::invalid_argument );
-		void writeByte( unsigned int index, const vmByte& data ) throw ( std::invalid_argument );
+		vmByte readByte( const unsigned int& index ) throw ( std::invalid_argument );
+		void writeByte( const unsigned int& index, const vmByte& data ) throw ( std::invalid_argument );
 
 		void clear();
 		void clearArea(unsigned int start, unsigned int stop );
