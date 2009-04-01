@@ -2,6 +2,7 @@
 #define ENGINEIO_H
 
 #include "vm/io.h"
+#include "vm/vm.h"
 
 #define TrackedEngineIODataSize 24
 #define TrackedEngineIORWDataSize 8
@@ -21,8 +22,7 @@ class TrackedEngineIO: public vm::IO
 {
 
   public:
-    TrackedEngineIO( const float& acceleration, const float& breakSpeed );
-    TrackedEngineIO( char* data, const float& acceleration, const float& breakSpeed );
+    TrackedEngineIO( vm::VM& vm, const float& acceleration, const float& breakSpeed );
     ~TrackedEngineIO();
 
     std::string className() { return "TrackedEngine"; }
@@ -34,7 +34,7 @@ class TrackedEngineIO: public vm::IO
 
     unsigned int size() { return TrackedEngineIODataSize; }
 
-    static vm::IO* createIOPart( Setting& sett, char* botMemory, unsigned int maxLength );
+    static vm::IO* createIOPart( Setting& sett, vm::VM& vm );
 
   protected:
 

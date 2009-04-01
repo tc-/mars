@@ -1,7 +1,7 @@
 #include "coreio.h"
 #include "bot/bot.h"
 #include "util/debug.h"
-#include "vm/vm.h"
+
 
 #define DEFAULT_MEM_SIZE 1024
 #define DEFAULT_CPU_SPEED 16
@@ -12,8 +12,9 @@ namespace vm
 {
 
 
-CoreIO::CoreIO(): m_vm(0), lastIOPos(CoreIODataSize), m_ios(16)
+CoreIO::CoreIO(): m_vm(0)
 {
+  m_ios.push_back(this);
 }
 
 CoreIO::~CoreIO()
@@ -35,8 +36,6 @@ IO* CoreIO::createCoreIOPart( Setting& sett )
   VM* vm =  new VM(*memory, cpuSpeed, 0, *ret);
   ret->setVM( vm );
 
-  ret->m_ios.add(ret, CoreIODataSize);
-
   return ret;
 }
 
@@ -46,10 +45,9 @@ int CoreIO::update( bot::Bot& bot )
   unsigned int t = 0;
   assert(m_vm != 0, "CoreIO::update( bot::Bot& bot ): m_vm is null.");
   m_vm->update();
-  for ( int unsigned i = 0; i < m_ios.count(); i++ ) {
-    IO* io = m_ios.get(i);
-    if ( io == 0 ) continue;
-    t += io->update( bot );
+  for ( IOVectorCIter i = m_ios.begin(); i != m_ios.end(); i++ ) {
+    if ( *i == 0 ) continue;
+    t += (*i)->update( bot );
   }
   m_vm->setTimeLeftD(-t);
   return t;
@@ -70,26 +68,8 @@ void CoreIO::setVM( VM* newVM )
 }
 
 
-Memory& CoreIO::memory()
-{
-  assert(m_vm != 0, "CoreIO::memory(): m_vm is null.");
-  return m_vm->memory();
-}
-
-
 vmByte CoreIO::readByte( const unsigned int& index )
 {
-  if ( index < CoreIODataSize ) {
-
-  } else if ( index < lastIOPos ) {
-    unsigned int base;
-    IO* io = m_ios.find(index, &base);
-    if ( io != 0 ) return io->readByte(index - base);
-  } else {
-    if ( m_vm->memory().size() > index ) {
-      return m_vm->memory().data[index];
-    }
-  }
   return 0;
 }
 
@@ -99,20 +79,22 @@ void CoreIO::writeByte( const unsigned int& index, const vmByte& data )
 
 }
 
+
 void CoreIO::clearIOList()
 {
   assert(false, "CoreIO::clearIOList(): Plox fix memleak here.");
-  m_ios.clear(); // TODO: Fix memleak here.
+  m_ios.clear(); /// @TODO Fix memleak here.
 }
 
 
-void CoreIO::addIO( Setting& s )
+IOIndex CoreIO::addIO( Setting& s )
 {
-  vm::IO* io = bot::Bot::s_iof.createIO(s, (char*)&m_vm->memory().data[lastIOPos], m_vm->memory().size() - lastIOPos );
+  vm::IO* io = bot::Bot::s_iof.createIO(s, *m_vm );
   if ( io != 0 ) {
-    m_ios.add( io, io->size() );
-    //lastIOPos += ; TODO
+    m_ios.push_back( io );
+    return m_ios.size() - 1;
   }
+  return 0;
 }
 
 
