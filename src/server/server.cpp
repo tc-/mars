@@ -33,7 +33,7 @@ void ServerStartupArgs::setArgs( int argc, char** argv ) throw (std::invalid_arg
 {
   ServerStartupArgs();
   std::string last = "";
-  for ( int i = 0; i < argc; i++ ) {
+  for ( int i = 1; i < argc; i++ ) {
     std::string arg = argv[i];
     if ( last == "" ) {
       if ( ( arg == "") || (arg == " ") || (arg == "\t") ) {

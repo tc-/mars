@@ -17,7 +17,7 @@
 					<Add directory="src" />
 				</Compiler>
 				<Linker>
-					<Add library="libconfig++" />
+					<Add library="libconfigduo++" />
 				</Linker>
 			</Target>
 			<Target title="Client-Debug">
@@ -53,7 +53,7 @@
 					<Add directory="src" />
 				</Compiler>
 				<Linker>
-					<Add library="libconfig++" />
+					<Add library="libconfigduo++" />
 				</Linker>
 			</Target>
 			<Target title="Server-Release">
@@ -67,6 +67,7 @@
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
+					<Add library="libconfigduo++" />
 				</Linker>
 			</Target>
 			<Target title="Benchmark">
@@ -83,6 +84,7 @@
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
+					<Add library="libconfigduo++" />
 				</Linker>
 			</Target>
 			<Target title="Benchmark Debug">
@@ -95,6 +97,9 @@
 					<Add option="-g" />
 					<Add directory="src" />
 				</Compiler>
+				<Linker>
+					<Add library="libconfigduo++" />
+				</Linker>
 			</Target>
 		</Build>
 		<Compiler>
